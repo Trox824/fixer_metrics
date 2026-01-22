@@ -40,4 +40,7 @@ model AgentExecution {
     @@index([startTime])
     @@index([status])
     @@index([model])
+    // Composite indexes for common query patterns
+    @@index([startTime, status])
+    @@index([startTime, model])
 }

@@ -18,9 +18,10 @@ interface KPICardProps {
     isPositive: boolean;
   };
   isLoading?: boolean;
+  variant?: "default" | "warning" | "success";
 }
 
-function KPICard({ label, value, trend, isLoading }: KPICardProps) {
+function KPICard({ label, value, trend, isLoading, variant = "default" }: KPICardProps) {
   if (isLoading) {
     return (
       <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -31,8 +32,20 @@ function KPICard({ label, value, trend, isLoading }: KPICardProps) {
     );
   }
 
+  const variantStyles = {
+    default: "",
+    warning: "border-error/30 bg-error/5",
+    success: "border-success/30 bg-success/5",
+  };
+
+  const valueStyles = {
+    default: "text-foreground",
+    warning: "text-error",
+    success: "text-success",
+  };
+
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+    <div className={`rounded-xl border border-border bg-card p-5 shadow-sm ${variantStyles[variant]}`}>
       {trend && (
         <div
           className={`mb-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -58,7 +71,7 @@ function KPICard({ label, value, trend, isLoading }: KPICardProps) {
           {trend.value.toFixed(1)}%
         </div>
       )}
-      <div className="text-3xl font-bold tabular-nums text-foreground">
+      <div className={`text-3xl font-bold tabular-nums ${valueStyles[variant]}`}>
         {value}
       </div>
       <div className="mt-1 text-sm text-muted-foreground">{label}</div>
@@ -73,6 +86,8 @@ export function KPICards({
   totalCostUsd,
   isLoading,
 }: KPICardsProps) {
+  const successRateVariant = successRate >= 90 ? "success" : successRate >= 70 ? "default" : "warning";
+
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <KPICard
@@ -84,6 +99,7 @@ export function KPICards({
         label="Success Rate"
         value={formatPercent(successRate)}
         isLoading={isLoading}
+        variant={successRateVariant}
       />
       <KPICard
         label="Avg Duration"

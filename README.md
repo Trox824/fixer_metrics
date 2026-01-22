@@ -125,6 +125,42 @@ Server-Side Aggregation:
 
 ---
 
+### 3b. Raw SQL for Advanced Aggregations
+
+**Decision:** Use Prisma's `$queryRaw` for time-bucketing and conditional aggregation queries.
+
+**Why Raw SQL?** Prisma ORM doesn't support these PostgreSQL-specific features:
+
+| Feature | PostgreSQL Syntax | Prisma Support |
+|---------|-------------------|----------------|
+| Time bucketing | `DATE_TRUNC('day', timestamp)` | ❌ Not supported ([Issue #6653](https://github.com/prisma/prisma/issues/6653)) |
+| Conditional count | `COUNT(*) FILTER (WHERE status='failure')` | ❌ Not supported ([Issue #6570](https://github.com/prisma/prisma/issues/6570)) |
+
+**Affected Endpoints:**
+- `getTimeSeries` - requires `DATE_TRUNC` for hour/day/week bucketing
+- `getFailureTrend` - requires both `DATE_TRUNC` and `COUNT FILTER`
+
+**Why Not Fetch-and-Process in JS?**
+```
+Raw SQL Approach:
+  DB does aggregation → Returns 30 rows (one per day)
+  Network: ~2KB, CPU: Database-optimized
+
+JS Processing Approach:
+  DB returns all rows → 10,000 rows to browser/server
+  Network: ~2MB, CPU: Single-threaded JS loop
+  Memory: Hold entire dataset in memory
+```
+
+**Safety Measures:**
+- All queries use `Prisma.sql` template literals for parameterized queries
+- Granularity values whitelisted via Zod validation + explicit mapping
+- No string concatenation in SQL construction
+
+**Code Location:** `src/server/api/routers/metrics.ts:150-181, 387-404`
+
+---
+
 ### 4. Time Bucketing: Daily Default
 
 **Decision:** Default to daily aggregation with option for hourly/weekly.

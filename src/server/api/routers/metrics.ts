@@ -5,7 +5,7 @@ import { Prisma } from "../../../../generated/prisma";
 const filterSchema = z.object({
   startDate: z.date(),
   endDate: z.date(),
-  status: z.enum(["all", "success", "failure", "error"]).optional().default("all"),
+  status: z.enum(["all", "success", "failure"]).optional().default("all"),
   model: z.string().optional(),
 });
 
@@ -30,7 +30,8 @@ export const metricsRouter = createTRPCRouter({
         ...(input.model && { model: input.model }),
       };
 
-      const [aggregates, statusCounts, successCostAgg, cacheAgg, avgFilesResult] = await Promise.all([
+      // Use Prisma native methods for most aggregations
+      const [aggregates, statusCounts, successCostAgg, cacheAgg] = await Promise.all([
         ctx.db.agentExecution.aggregate({
           where,
           _count: true,
@@ -54,13 +55,11 @@ export const metricsRouter = createTRPCRouter({
           _count: true,
           _sum: { reportedCostUsd: true },
         }),
-        // Success-only cost aggregation
         ctx.db.agentExecution.aggregate({
           where: { ...baseWhere, status: "success" },
           _sum: { reportedCostUsd: true },
           _count: true,
         }),
-        // Cache aggregation for cache hit rate
         ctx.db.agentExecution.aggregate({
           where: baseWhere,
           _sum: {
@@ -69,34 +68,31 @@ export const metricsRouter = createTRPCRouter({
             inputTokens: true,
           },
         }),
-        // Avg files modified (only for successful runs with files)
-        ctx.db.$queryRaw<[{ avg_files: number | null }]>`
-          SELECT AVG(array_length("modifiedFiles", 1))::float as avg_files
-          FROM "AgentExecution"
-          WHERE "startTime" >= ${input.startDate}
-            AND "startTime" <= ${input.endDate}
-            AND "status" = 'success'
-            AND array_length("modifiedFiles", 1) > 0
-            ${input.model ? Prisma.sql`AND "model" = ${input.model}` : Prisma.empty}
-        `,
       ]);
+
+      // Calculate avg files modified using Prisma findMany + JS
+      const successfulRuns = await ctx.db.agentExecution.findMany({
+        where: {
+          ...baseWhere,
+          status: "success",
+          modifiedFiles: { isEmpty: false },
+        },
+        select: { modifiedFiles: true },
+      });
+      const avgFilesModified = successfulRuns.length > 0
+        ? successfulRuns.reduce((sum, r) => sum + r.modifiedFiles.length, 0) / successfulRuns.length
+        : 0;
 
       const totalRuns = aggregates._count;
       const successCount = statusCounts.find((s) => s.status === "success")?._count ?? 0;
       const failureCount = statusCounts.find((s) => s.status === "failure")?._count ?? 0;
-      const errorCount = statusCounts.find((s) => s.status === "error")?._count ?? 0;
-      const totalFailures = failureCount + errorCount;
 
       const totalCostUsd = aggregates._sum.reportedCostUsd?.toNumber() ?? 0;
       const successCost = successCostAgg._sum.reportedCostUsd?.toNumber() ?? 0;
       const successCostCount = successCostAgg._count;
 
-      // Calculate wasted spend from failed runs
-      const failedCost = statusCounts
-        .filter((s) => s.status === "failure" || s.status === "error")
-        .reduce((sum, s) => sum + (s._sum.reportedCostUsd?.toNumber() ?? 0), 0);
+      const failedCost = statusCounts.find((s) => s.status === "failure")?._sum.reportedCostUsd?.toNumber() ?? 0;
 
-      // Cache hit rate calculation
       const cacheReadTokens = cacheAgg._sum.cacheReadInputTokens ?? 0;
       const totalInputTokens = cacheAgg._sum.inputTokens ?? 0;
       const cacheHitRate = totalInputTokens > 0 ? (cacheReadTokens / totalInputTokens) * 100 : 0;
@@ -104,7 +100,7 @@ export const metricsRouter = createTRPCRouter({
       return {
         totalRuns,
         successCount,
-        failureCount: totalFailures,
+        failureCount,
         successRate: totalRuns > 0 ? (successCount / totalRuns) * 100 : 0,
         avgDurationMs: aggregates._avg.durationMs ?? 0,
         totalCostUsd,
@@ -113,13 +109,12 @@ export const metricsRouter = createTRPCRouter({
         totalOutputTokens: aggregates._sum.outputTokens ?? 0,
         avgLlmCalls: aggregates._avg.llmCallCount ?? 0,
         avgToolCalls: aggregates._avg.toolCallsCount ?? 0,
-        // New metrics
         wastedSpend: failedCost,
         costPerSuccess: successCostCount > 0 ? successCost / successCostCount : 0,
         cacheHitRate,
         cacheReadTokens,
         cacheCreationTokens: aggregates._sum.cacheCreationInputTokens ?? 0,
-        avgFilesModified: avgFilesResult[0]?.avg_files ?? 0,
+        avgFilesModified,
       };
     }),
 
@@ -135,20 +130,23 @@ export const metricsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { startDate, endDate, status, model, granularity } = input;
 
-      // Build WHERE clause
-      const conditions: string[] = [
-        `"startTime" >= '${startDate.toISOString()}'`,
-        `"startTime" <= '${endDate.toISOString()}'`,
+      // Build WHERE clause safely using Prisma.sql for parameterized queries
+      const conditions: Prisma.Sql[] = [
+        Prisma.sql`"startTime" >= ${startDate}`,
+        Prisma.sql`"startTime" <= ${endDate}`,
       ];
       if (status !== "all") {
-        conditions.push(`"status" = '${status}'`);
+        conditions.push(Prisma.sql`"status" = ${status}`);
       }
       if (model) {
-        conditions.push(`"model" = '${model}'`);
+        conditions.push(Prisma.sql`"model" = ${model}`);
       }
-      const whereClause = conditions.join(" AND ");
+      const whereClause = Prisma.join(conditions, " AND ");
 
-      // Using raw SQL for DATE_TRUNC functionality
+      // Whitelist granularity to prevent SQL injection (already validated by zod, but extra safety)
+      const granularityMap = { hour: "hour", day: "day", week: "week" } as const;
+      const safeGranularity = granularityMap[granularity];
+
       const result = await ctx.db.$queryRaw<
         Array<{
           bucket: Date;
@@ -165,10 +163,10 @@ export const metricsRouter = createTRPCRouter({
         }>
       >`
         SELECT
-          DATE_TRUNC(${granularity}, "startTime") as bucket,
+          DATE_TRUNC(${safeGranularity}, "startTime") as bucket,
           COUNT(*)::bigint as count,
           COUNT(*) FILTER (WHERE "status" = 'success')::bigint as success_count,
-          COUNT(*) FILTER (WHERE "status" IN ('failure', 'error'))::bigint as failure_count,
+          COUNT(*) FILTER (WHERE "status" = 'failure')::bigint as failure_count,
           AVG("durationMs")::float as avg_duration_ms,
           SUM("reportedCostUsd") as total_cost_usd,
           SUM("inputTokens")::bigint as total_input_tokens,
@@ -177,7 +175,7 @@ export const metricsRouter = createTRPCRouter({
           SUM(COALESCE("cacheReadInputTokens", 0))::bigint as cache_read_tokens,
           SUM(COALESCE("cacheCreationInputTokens", 0))::bigint as cache_creation_tokens
         FROM "AgentExecution"
-        WHERE ${Prisma.raw(whereClause)}
+        WHERE ${whereClause}
         GROUP BY bucket
         ORDER BY bucket ASC
       `;
@@ -267,7 +265,7 @@ export const metricsRouter = createTRPCRouter({
         ...(input.status !== "all" && { status: input.status }),
       };
 
-      const [modelStats, successCounts, avgFilesPerModel] = await Promise.all([
+      const [modelStats, successCounts] = await Promise.all([
         ctx.db.agentExecution.groupBy({
           by: ["model"],
           where,
@@ -287,35 +285,48 @@ export const metricsRouter = createTRPCRouter({
           where: { ...where, status: "success" },
           _count: true,
         }),
-        // Get avg files modified per model
-        ctx.db.$queryRaw<Array<{ model: string; avg_files: number | null }>>`
-          SELECT "model", AVG(array_length("modifiedFiles", 1))::float as avg_files
-          FROM "AgentExecution"
-          WHERE "startTime" >= ${input.startDate}
-            AND "startTime" <= ${input.endDate}
-            AND "status" = 'success'
-            AND array_length("modifiedFiles", 1) > 0
-          GROUP BY "model"
-        `,
       ]);
 
-      const successMap = new Map(successCounts.map((s) => [s.model, s._count]));
-      const avgFilesMap = new Map(avgFilesPerModel.map((r) => [r.model, r.avg_files ?? 0]));
+      // Get avg files per model using Prisma
+      const successfulByModel = await ctx.db.agentExecution.findMany({
+        where: {
+          startTime: { gte: input.startDate, lte: input.endDate },
+          status: "success",
+          modifiedFiles: { isEmpty: false },
+        },
+        select: { model: true, modifiedFiles: true },
+      });
 
-      return modelStats.map((stat) => ({
-        model: stat.model,
-        totalRuns: stat._count,
-        successRate:
-          stat._count > 0
-            ? ((successMap.get(stat.model) ?? 0) / stat._count) * 100
-            : 0,
-        avgDurationMs: stat._avg.durationMs ?? 0,
-        avgLlmCalls: stat._avg.llmCallCount ?? 0,
-        avgToolCalls: stat._avg.toolCallsCount ?? 0,
-        totalTokens: stat._sum.totalTokens ?? 0,
-        totalCostUsd: stat._sum.reportedCostUsd?.toNumber() ?? 0,
-        avgFilesModified: avgFilesMap.get(stat.model) ?? 0,
-      }));
+      // Calculate avg files per model in JS
+      const filesPerModel = new Map<string, { total: number; count: number }>();
+      for (const run of successfulByModel) {
+        const existing = filesPerModel.get(run.model) ?? { total: 0, count: 0 };
+        existing.total += run.modifiedFiles.length;
+        existing.count += 1;
+        filesPerModel.set(run.model, existing);
+      }
+
+      const successMap = new Map(successCounts.map((s) => [s.model, s._count]));
+
+      return modelStats.map((stat) => {
+        const filesData = filesPerModel.get(stat.model);
+        const avgFilesModified = filesData ? filesData.total / filesData.count : 0;
+
+        return {
+          model: stat.model,
+          totalRuns: stat._count,
+          successRate:
+            stat._count > 0
+              ? ((successMap.get(stat.model) ?? 0) / stat._count) * 100
+              : 0,
+          avgDurationMs: stat._avg.durationMs ?? 0,
+          avgLlmCalls: stat._avg.llmCallCount ?? 0,
+          avgToolCalls: stat._avg.toolCallsCount ?? 0,
+          totalTokens: stat._sum.totalTokens ?? 0,
+          totalCostUsd: stat._sum.reportedCostUsd?.toNumber() ?? 0,
+          avgFilesModified,
+        };
+      });
     }),
 
   /**
@@ -324,31 +335,26 @@ export const metricsRouter = createTRPCRouter({
   getErrorBreakdown: publicProcedure
     .input(filterSchema)
     .query(async ({ ctx, input }) => {
-      const result = await ctx.db.$queryRaw<
-        Array<{
-          error_message: string | null;
-          count: bigint;
-          total_cost: Prisma.Decimal | null;
-        }>
-      >`
-        SELECT
-          COALESCE("errorMessage", 'Unknown Error') as error_message,
-          COUNT(*)::bigint as count,
-          SUM("reportedCostUsd") as total_cost
-        FROM "AgentExecution"
-        WHERE "startTime" >= ${input.startDate}
-          AND "startTime" <= ${input.endDate}
-          AND "status" IN ('failure', 'error')
-          ${input.model ? Prisma.sql`AND "model" = ${input.model}` : Prisma.empty}
-        GROUP BY "errorMessage"
-        ORDER BY count DESC
-        LIMIT 10
-      `;
+      const where: Prisma.AgentExecutionWhereInput = {
+        startTime: { gte: input.startDate, lte: input.endDate },
+        status: "failure",
+        ...(input.model && { model: input.model }),
+      };
 
-      return result.map((row) => ({
-        errorMessage: row.error_message ?? "Unknown Error",
-        count: Number(row.count),
-        wastedCost: row.total_cost?.toNumber() ?? 0,
+      // Use Prisma groupBy for error breakdown
+      const errorGroups = await ctx.db.agentExecution.groupBy({
+        by: ["errorMessage"],
+        where,
+        _count: true,
+        _sum: { reportedCostUsd: true },
+        orderBy: { _count: { errorMessage: "desc" } },
+        take: 10,
+      });
+
+      return errorGroups.map((row) => ({
+        errorMessage: row.errorMessage ?? "Unknown Error",
+        count: row._count,
+        wastedCost: row._sum.reportedCostUsd?.toNumber() ?? 0,
       }));
     }),
 
@@ -364,6 +370,20 @@ export const metricsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { startDate, endDate, model, granularity } = input;
 
+      // Build WHERE clause safely using Prisma.sql for parameterized queries
+      const conditions: Prisma.Sql[] = [
+        Prisma.sql`"startTime" >= ${startDate}`,
+        Prisma.sql`"startTime" <= ${endDate}`,
+      ];
+      if (model) {
+        conditions.push(Prisma.sql`"model" = ${model}`);
+      }
+      const whereClause = Prisma.join(conditions, " AND ");
+
+      // Whitelist granularity to prevent SQL injection (already validated by zod, but extra safety)
+      const granularityMap = { hour: "hour", day: "day", week: "week" } as const;
+      const safeGranularity = granularityMap[granularity];
+
       const result = await ctx.db.$queryRaw<
         Array<{
           bucket: Date;
@@ -373,14 +393,12 @@ export const metricsRouter = createTRPCRouter({
         }>
       >`
         SELECT
-          DATE_TRUNC(${granularity}, "startTime") as bucket,
-          COUNT(*) FILTER (WHERE "status" IN ('failure', 'error'))::bigint as failure_count,
+          DATE_TRUNC(${safeGranularity}, "startTime") as bucket,
+          COUNT(*) FILTER (WHERE "status" = 'failure')::bigint as failure_count,
           COUNT(*)::bigint as total_count,
-          SUM("reportedCostUsd") FILTER (WHERE "status" IN ('failure', 'error')) as wasted_cost
+          SUM("reportedCostUsd") FILTER (WHERE "status" = 'failure') as wasted_cost
         FROM "AgentExecution"
-        WHERE "startTime" >= ${startDate}
-          AND "startTime" <= ${endDate}
-          ${model ? Prisma.sql`AND "model" = ${model}` : Prisma.empty}
+        WHERE ${whereClause}
         GROUP BY bucket
         ORDER BY bucket ASC
       `;
@@ -402,34 +420,43 @@ export const metricsRouter = createTRPCRouter({
   getFailuresByModel: publicProcedure
     .input(filterSchema)
     .query(async ({ ctx, input }) => {
-      const result = await ctx.db.$queryRaw<
-        Array<{
-          model: string;
-          failure_count: bigint;
-          total_count: bigint;
-          wasted_cost: Prisma.Decimal | null;
-        }>
-      >`
-        SELECT
-          "model",
-          COUNT(*) FILTER (WHERE "status" IN ('failure', 'error'))::bigint as failure_count,
-          COUNT(*)::bigint as total_count,
-          SUM("reportedCostUsd") FILTER (WHERE "status" IN ('failure', 'error')) as wasted_cost
-        FROM "AgentExecution"
-        WHERE "startTime" >= ${input.startDate}
-          AND "startTime" <= ${input.endDate}
-        GROUP BY "model"
-        ORDER BY failure_count DESC
-      `;
+      const where: Prisma.AgentExecutionWhereInput = {
+        startTime: { gte: input.startDate, lte: input.endDate },
+      };
 
-      return result.map((row) => ({
-        model: row.model,
-        failureCount: Number(row.failure_count),
-        totalCount: Number(row.total_count),
-        failureRate: Number(row.total_count) > 0
-          ? (Number(row.failure_count) / Number(row.total_count)) * 100
-          : 0,
-        wastedCost: row.wasted_cost?.toNumber() ?? 0,
-      }));
+      // Get all runs grouped by model
+      const allByModel = await ctx.db.agentExecution.groupBy({
+        by: ["model"],
+        where,
+        _count: true,
+      });
+
+      // Get failures grouped by model
+      const failuresByModel = await ctx.db.agentExecution.groupBy({
+        by: ["model"],
+        where: { ...where, status: "failure" },
+        _count: true,
+        _sum: { reportedCostUsd: true },
+      });
+
+      const failureMap = new Map(
+        failuresByModel.map((f) => [
+          f.model,
+          { count: f._count, cost: f._sum.reportedCostUsd?.toNumber() ?? 0 },
+        ])
+      );
+
+      return allByModel
+        .map((row) => {
+          const failures = failureMap.get(row.model) ?? { count: 0, cost: 0 };
+          return {
+            model: row.model,
+            failureCount: failures.count,
+            totalCount: row._count,
+            failureRate: row._count > 0 ? (failures.count / row._count) * 100 : 0,
+            wastedCost: failures.cost,
+          };
+        })
+        .sort((a, b) => b.failureCount - a.failureCount);
     }),
 });

@@ -10,8 +10,7 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 p-3">
-        <a
-          href="/"
+        <div
           className="flex items-center gap-3 rounded-lg bg-accent-muted px-3 py-2.5 text-sm font-medium text-accent"
         >
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,7 +22,7 @@ export function Sidebar() {
             />
           </svg>
           <span>Metrics Dashboard</span>
-        </a>
+        </div>
       </nav>
     </aside>
   );

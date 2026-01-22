@@ -11,7 +11,7 @@ import {
   Legend,
 } from "recharts";
 import { chartConfig, CHART_COLORS } from "~/lib/chart-config";
-import { formatNumber, formatPercent, formatCurrency } from "~/lib/format";
+import { formatNumber, formatPercent, formatCurrency, formatDuration } from "~/lib/format";
 
 interface ModelComparisonProps {
   data: Array<{
@@ -20,6 +20,7 @@ interface ModelComparisonProps {
     successRate: number;
     avgDurationMs: number;
     totalCostUsd: number;
+    avgFilesModified?: number;
   }>;
   isLoading?: boolean;
 }
@@ -72,6 +73,8 @@ export function ModelComparison({ data, isLoading }: ModelComparisonProps) {
               <th className="px-2 py-2 text-left font-medium text-muted-foreground">Model</th>
               <th className="px-2 py-2 text-right font-medium text-muted-foreground">Runs</th>
               <th className="px-2 py-2 text-right font-medium text-muted-foreground">Success</th>
+              <th className="px-2 py-2 text-right font-medium text-muted-foreground">Avg Duration</th>
+              <th className="px-2 py-2 text-right font-medium text-muted-foreground">Avg Files</th>
               <th className="px-2 py-2 text-right font-medium text-muted-foreground">Cost</th>
             </tr>
           </thead>
@@ -92,6 +95,10 @@ export function ModelComparison({ data, isLoading }: ModelComparisonProps) {
                   >
                     {formatPercent(row.successRate)}
                   </span>
+                </td>
+                <td className="px-2 py-2 text-right tabular-nums">{formatDuration(row.avgDurationMs)}</td>
+                <td className="px-2 py-2 text-right tabular-nums">
+                  {row.avgFilesModified !== undefined ? row.avgFilesModified.toFixed(1) : "—"}
                 </td>
                 <td className="px-2 py-2 text-right tabular-nums">{formatCurrency(row.totalCostUsd)}</td>
               </tr>

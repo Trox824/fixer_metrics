@@ -2,181 +2,157 @@
 
 import { useState, useMemo } from "react";
 import { api } from "~/trpc/react";
-import { subDays } from "date-fns";
+import { subDays, startOfDay, endOfDay } from "date-fns";
 import { FilterBar } from "./FilterBar";
 import { KPICards } from "./KPICards";
-import { ChartCard } from "./ChartCard";
-import { ExecutionsChart } from "./charts/ExecutionsChart";
-import { SuccessRateChart } from "./charts/SuccessRateChart";
-import { TokenUsageChart } from "./charts/TokenUsageChart";
-import { CostChart } from "./charts/CostChart";
-import { DurationChart } from "./charts/DurationChart";
-import { ModelComparison } from "./ModelComparison";
+import { DashboardTabs, type TabId } from "./DashboardTabs";
+import { OverviewTab } from "./tabs/OverviewTab";
+import { EfficiencyTab } from "./tabs/EfficiencyTab";
+import { ErrorsTab } from "./tabs/ErrorsTab";
+import type { DateRange } from "./DateRangePicker";
 
-type DateRange = "7d" | "30d" | "90d";
-type Status = "all" | "success" | "failure" | "error";
-
-function getDateRange(range: DateRange): { startDate: Date; endDate: Date } {
-  const endDate = new Date();
-  const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
-  const startDate = subDays(endDate, days);
-  return { startDate, endDate };
-}
-
-// Helper to generate dynamic subtitles based on filters
-function getFilterContext(status: Status, model: string): string {
-  const parts: string[] = [];
-  if (status !== "all") {
-    parts.push(status === "success" ? "successful" : "failed");
-  }
-  if (model) {
-    parts.push(model);
-  }
-  return parts.length > 0 ? ` (${parts.join(", ")} runs)` : "";
-}
-
-// Filter warnings for specific metric/filter combinations
-function getCostFilterWarning(status: Status): string | undefined {
-  if (status === "success") {
-    return "Showing only successful runs - cost of failed runs is hidden";
-  }
-  if (status === "failure" || status === "error") {
-    return "Showing wasted spend on failed runs";
-  }
-  return undefined;
-}
-
-function getDurationFilterWarning(status: Status): string | undefined {
-  if (status === "failure" || status === "error") {
-    return "Showing time spent on failed runs (may include partial execution)";
-  }
-  return undefined;
-}
-
-function getTokenFilterWarning(status: Status): string | undefined {
-  if (status === "failure" || status === "error") {
-    return "Tokens consumed before failure occurred";
-  }
-  return undefined;
+function getDefaultDateRange(): DateRange {
+  return {
+    startDate: startOfDay(subDays(new Date(), 29)),
+    endDate: endOfDay(new Date()),
+  };
 }
 
 export function Dashboard() {
-  const [dateRange, setDateRange] = useState<DateRange>("30d");
-  const [status, setStatus] = useState<Status>("all");
+  const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange);
   const [model, setModel] = useState<string>("");
-
-  const { startDate, endDate } = useMemo(() => getDateRange(dateRange), [dateRange]);
+  const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   const filterInput = useMemo(
     () => ({
-      startDate,
-      endDate,
-      status,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      status: "all" as const,
       model: model || undefined,
     }),
-    [startDate, endDate, status, model]
+    [dateRange, model]
   );
 
+  // Query configuration
+  // Models rarely change - cache for 5 minutes
+  const MODELS_STALE_TIME = 5 * 60 * 1000;
+  // Dashboard data - cache for 30 seconds (balance between freshness and performance)
+  const DATA_STALE_TIME = 30 * 1000;
+
   // Fetch data
-  const { data: models = [] } = api.metrics.getModels.useQuery();
+  const { data: models = [] } = api.metrics.getModels.useQuery(undefined, {
+    staleTime: MODELS_STALE_TIME,
+    gcTime: MODELS_STALE_TIME * 2,
+  });
 
   const { data: summary, isLoading: summaryLoading } =
-    api.metrics.getSummary.useQuery(filterInput);
-
-  const { data: timeSeries = [], isLoading: timeSeriesLoading } =
-    api.metrics.getTimeSeries.useQuery({
-      ...filterInput,
-      granularity: "day",
+    api.metrics.getSummary.useQuery(filterInput, {
+      staleTime: DATA_STALE_TIME,
     });
 
+  const { data: timeSeries = [], isLoading: timeSeriesLoading } =
+    api.metrics.getTimeSeries.useQuery(
+      {
+        ...filterInput,
+        granularity: "day",
+      },
+      { staleTime: DATA_STALE_TIME }
+    );
+
   const { data: modelComparison = [], isLoading: modelComparisonLoading } =
-    api.metrics.getModelComparison.useQuery(filterInput);
+    api.metrics.getModelComparison.useQuery(filterInput, {
+      staleTime: DATA_STALE_TIME,
+    });
+
+  // Error-specific data (only fetch when on errors tab)
+  const { data: errorBreakdown = [], isLoading: errorBreakdownLoading } =
+    api.metrics.getErrorBreakdown.useQuery(filterInput, {
+      enabled: activeTab === "errors",
+      staleTime: DATA_STALE_TIME,
+    });
+
+  const { data: failureTrend = [], isLoading: failureTrendLoading } =
+    api.metrics.getFailureTrend.useQuery(
+      { ...filterInput, granularity: "day" },
+      {
+        enabled: activeTab === "errors",
+        staleTime: DATA_STALE_TIME,
+      }
+    );
+
+  const { data: failuresByModel = [], isLoading: failuresByModelLoading } =
+    api.metrics.getFailuresByModel.useQuery(filterInput, {
+      enabled: activeTab === "errors",
+      staleTime: DATA_STALE_TIME,
+    });
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">
-            Fixer Agent Metrics
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Monitor performance, costs, and reliability
-          </p>
+      {/* Header with Tabs and Filters */}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">
+              Fixer Agent Metrics
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Monitor performance, costs, and reliability
+            </p>
+          </div>
+          <FilterBar
+            dateRange={dateRange}
+            model={model}
+            models={models}
+            onDateRangeChange={setDateRange}
+            onModelChange={setModel}
+          />
         </div>
-        <FilterBar
-          dateRange={dateRange}
-          status={status}
-          model={model}
-          models={models}
-          onDateRangeChange={setDateRange}
-          onStatusChange={setStatus}
-          onModelChange={setModel}
+        <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      </div>
+
+      {/* KPI Cards (shown on Overview tab) */}
+      {activeTab === "overview" && (
+        <KPICards
+          totalRuns={summary?.totalRuns ?? 0}
+          successRate={summary?.successRate ?? 0}
+          avgDurationMs={summary?.avgDurationMs ?? 0}
+          totalCostUsd={summary?.totalCostUsd ?? 0}
+          isLoading={summaryLoading}
         />
-      </div>
+      )}
 
-      {/* KPI Cards */}
-      <KPICards
-        totalRuns={summary?.totalRuns ?? 0}
-        successRate={summary?.successRate ?? 0}
-        avgDurationMs={summary?.avgDurationMs ?? 0}
-        totalCostUsd={summary?.totalCostUsd ?? 0}
-        isLoading={summaryLoading}
-      />
+      {/* Tab Content */}
+      {activeTab === "overview" && (
+        <OverviewTab
+          timeSeries={timeSeries}
+          modelComparison={modelComparison}
+          timeSeriesLoading={timeSeriesLoading}
+          modelComparisonLoading={modelComparisonLoading}
+          model={model}
+        />
+      )}
 
-      {/* Charts Row 1 */}
-      <div className="grid gap-5 lg:grid-cols-2">
-        <ChartCard
-          title="Executions Over Time"
-          subtitle={`Daily execution count${getFilterContext(status, model)}`}
-        >
-          <ExecutionsChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-        <ChartCard
-          title="Success / Failure Rate"
-          subtitle={`Daily breakdown by status${model ? ` (${model})` : ""}`}
-        >
-          <SuccessRateChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-      </div>
+      {activeTab === "efficiency" && (
+        <EfficiencyTab
+          summary={summary}
+          timeSeries={timeSeries}
+          summaryLoading={summaryLoading}
+          timeSeriesLoading={timeSeriesLoading}
+        />
+      )}
 
-      {/* Charts Row 2 */}
-      <div className="grid gap-5 lg:grid-cols-2">
-        <ChartCard
-          title="Token Usage"
-          subtitle={`Input and output tokens${getFilterContext(status, model)}`}
-          correlationHint="Tokens drive Cost"
-          filterWarning={getTokenFilterWarning(status)}
-        >
-          <TokenUsageChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-        <ChartCard
-          title="Cost Analysis"
-          subtitle={`Daily spend + cost per run${getFilterContext(status, model)}`}
-          correlationHint="Cost = f(Tokens, Model)"
-          filterWarning={getCostFilterWarning(status)}
-        >
-          <CostChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-      </div>
-
-      {/* Charts Row 3 */}
-      <div className="grid gap-5 lg:grid-cols-2">
-        <ChartCard
-          title="Duration Trend"
-          subtitle={`Average execution time${getFilterContext(status, model)}`}
-          correlationHint="Includes non-LLM time"
-          filterWarning={getDurationFilterWarning(status)}
-        >
-          <DurationChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-        <ChartCard
-          title="Model Comparison"
-          subtitle="Performance metrics by model"
-        >
-          <ModelComparison data={modelComparison} isLoading={modelComparisonLoading} />
-        </ChartCard>
-      </div>
+      {activeTab === "errors" && (
+        <ErrorsTab
+          summary={summary}
+          errorBreakdown={errorBreakdown}
+          failureTrend={failureTrend}
+          failuresByModel={failuresByModel}
+          summaryLoading={summaryLoading}
+          errorBreakdownLoading={errorBreakdownLoading}
+          failureTrendLoading={failureTrendLoading}
+          failuresByModelLoading={failuresByModelLoading}
+        />
+      )}
     </div>
   );
 }
