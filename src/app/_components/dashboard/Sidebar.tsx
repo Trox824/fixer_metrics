@@ -1,29 +1,118 @@
 "use client";
 
-export function Sidebar() {
-  return (
-    <aside className="flex h-full w-64 flex-shrink-0 flex-col border-r border-border bg-card">
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-border px-4">
-        <span className="text-lg font-semibold text-foreground">Fixer Agent</span>
-      </div>
+import { useState, useEffect } from "react";
 
-      {/* Navigation */}
-      <nav className="flex-1 p-3">
-        <div
-          className="flex items-center gap-3 rounded-lg bg-accent-muted px-3 py-2.5 text-sm font-medium text-accent"
-        >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+export function Sidebar() {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Check screen size and auto-collapse on mobile
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isMobile = window.innerWidth < 1208;
+      if (isMobile) {
+        setIsCollapsed(true);
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  return (
+    <>
+      {/* Sidebar */}
+      <aside
+        className={`overflow-hidden border-r border-border bg-background transition-[width] duration-200 ease-in-out will-change-[width] ${
+          isCollapsed ? "w-16" : "w-64"
+        }`}
+      >
+        <div className="flex h-full flex-col">
+          {/* Header */}
+          <div className="flex h-16 items-center justify-between border-b border-border px-4">
+            {!isCollapsed && (
+              <div className="flex items-center gap-2 opacity-100 transition-opacity duration-200">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-5 w-5"
+                  >
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <span className="whitespace-nowrap font-semibold">Fixer</span>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 space-y-1 p-2">
+            <SidebarLink
+              icon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-5 w-5"
+                >
+                  <rect width="7" height="9" x="3" y="3" rx="1" />
+                  <rect width="7" height="5" x="14" y="3" rx="1" />
+                  <rect width="7" height="9" x="14" y="12" rx="1" />
+                  <rect width="7" height="5" x="3" y="16" rx="1" />
+                </svg>
+              }
+              label="Dashboard"
+              isCollapsed={isCollapsed}
+              isActive={true}
             />
-          </svg>
-          <span>Metrics Dashboard</span>
+          </nav>
+
+         
         </div>
-      </nav>
-    </aside>
+      </aside>
+    </>
+  );
+}
+
+interface SidebarLinkProps {
+  icon: React.ReactNode;
+  label: string;
+  isCollapsed: boolean;
+  isActive?: boolean;
+}
+
+function SidebarLink({
+  icon,
+  label,
+  isCollapsed,
+  isActive = false,
+}: SidebarLinkProps) {
+  return (
+    <button
+      className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+        isActive
+          ? "bg-primary/10 text-primary"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+      } ${isCollapsed ? "justify-center" : ""}`}
+      title={isCollapsed ? label : undefined}
+    >
+      {icon}
+      {!isCollapsed && (
+        <span className="whitespace-nowrap opacity-100 transition-opacity duration-200">
+          {label}
+        </span>
+      )}
+    </button>
   );
 }

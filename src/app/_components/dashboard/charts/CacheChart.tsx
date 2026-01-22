@@ -107,10 +107,10 @@ export function CacheChart({ data, isLoading }: CacheChartProps) {
           yAxisId="rate"
           type="monotone"
           dataKey="cacheHitRate"
-          stroke={CHART_COLORS.cyan}
+          stroke={CHART_COLORS.primary}
           strokeWidth={2}
           dot={false}
-          activeDot={{ r: 4, fill: CHART_COLORS.cyan }}
+          activeDot={{ r: 4, fill: CHART_COLORS.primary }}
           name="Cache Hit Rate"
         />
       </ComposedChart>

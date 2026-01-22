@@ -49,28 +49,28 @@ export function EfficiencyTab({
         isLoading={summaryLoading}
       />
 
-      {/* Cache Efficiency Chart */}
+      {/* Cost Chart - Most Important */}
       <ChartCard
-        title="Cache Efficiency"
-        subtitle="Cache read/creation tokens and hit rate over time"
-        correlationHint="Higher hit rate = lower cost"
+        title="Cost per Run Trend"
+        subtitle="Cost efficiency over time"
       >
-        <CacheChart data={timeSeries} isLoading={timeSeriesLoading} />
+        <CostChart data={timeSeries} isLoading={timeSeriesLoading} />
       </ChartCard>
 
       {/* Charts Row 2 */}
       <div className="grid gap-5 lg:grid-cols-2">
         <ChartCard
+          title="Cache Efficiency"
+          subtitle="Cache read/creation tokens and hit rate over time"
+          correlationHint="Higher hit rate = lower cost"
+        >
+          <CacheChart data={timeSeries} isLoading={timeSeriesLoading} />
+        </ChartCard>
+        <ChartCard
           title="Token Usage"
           subtitle="Input and output token breakdown"
         >
           <TokenUsageChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-        <ChartCard
-          title="Cost per Run Trend"
-          subtitle="Cost efficiency over time"
-        >
-          <CostChart data={timeSeries} isLoading={timeSeriesLoading} />
         </ChartCard>
       </div>
     </div>

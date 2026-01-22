@@ -1,22 +1,46 @@
+/**
+ * Chart Color Configuration
+ * Professional Analytics Dashboard Palette
+ *
+ * Design principles:
+ * - Muted, sophisticated tones (600-level Tailwind colors)
+ * - High contrast for accessibility
+ * - Harmonious color relationships
+ * - Less visual fatigue for data-heavy dashboards
+ *
+ * @see https://tailwindcss.com/docs/colors
+ * @see https://ui.shadcn.com/colors
+ */
+
 export const CHART_COLORS = {
-  primary: '#0052FF',
-  success: '#10B981',
-  error: '#EF4444',
-  purple: '#8B5CF6',
-  amber: '#F59E0B',
-  pink: '#EC4899',
-  cyan: '#06B6D4',
+  // Primary metrics - sophisticated indigo-blue
+  primary: '#4F46E5',    // indigo-600 - main metric color
+  secondary: '#6366F1',  // indigo-500 - lighter variant
+
+  // Semantic colors - professional, not alarming
+  success: '#059669',    // emerald-600 - positive outcomes
+  error: '#DC2626',      // red-600 - failures (muted red)
+
+  // Accent colors - warm tones for secondary metrics
+  amber: '#D97706',      // amber-600 - efficiency/time metrics
+
+  // Additional colors for variety
+  purple: '#7C3AED',     // violet-600 - model comparison
+  cyan: '#0891B2',       // cyan-600 - cache/additional
+  teal: '#0D9488',       // teal-600 - tertiary metrics
+  pink: '#DB2777',       // pink-600 - accent
+  slate: '#475569',      // slate-600 - neutral data
 } as const;
 
-export const TOKEN_COLORS = {
-  input: '#0052FF',
-  output: '#10B981',
-} as const;
-
-export const STATUS_COLORS = {
-  success: '#10B981',
-  failure: '#EF4444',
-} as const;
+// Model comparison colors (visually distinct, harmonious)
+export const MODEL_COLORS = [
+  '#4F46E5',  // indigo-600
+  '#7C3AED',  // violet-600
+  '#0891B2',  // cyan-600
+  '#D97706',  // amber-600
+  '#DB2777',  // pink-600
+  '#0D9488',  // teal-600
+] as const;
 
 export const chartConfig = {
   cartesianGrid: {
@@ -46,7 +70,7 @@ export const chartConfig = {
       padding: '12px',
     },
     labelStyle: {
-      color: '#0F172A',
+      color: '#1E293B',
       fontWeight: 600,
       marginBottom: '4px',
     },

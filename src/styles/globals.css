@@ -5,9 +5,15 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
+  /* ===========================================
+     FIXER METRICS DASHBOARD COLOR PALETTE
+     Theme: Professional Analytics Dashboard
+     Style: Data-Dense + Trust Blue
+     =========================================== */
+
   /* Base */
-  --color-background: #FAFAFA;
-  --color-foreground: #0F172A;
+  --color-background: #F8FAFC;
+  --color-foreground: #1E293B;
 
   /* Surfaces */
   --color-card: #FFFFFF;
@@ -18,29 +24,42 @@
   --color-border: #E2E8F0;
   --color-border-subtle: #F1F5F9;
 
-  /* Primary Accent (Electric Blue) */
-  --color-accent: #0052FF;
-  --color-accent-secondary: #4D7CFF;
+  /* Primary Accent (Indigo - sophisticated, professional) */
+  --color-accent: #4F46E5;
+  --color-accent-secondary: #6366F1;
   --color-accent-foreground: #FFFFFF;
-  --color-accent-muted: rgba(0, 82, 255, 0.08);
+  --color-accent-muted: rgba(79, 70, 229, 0.08);
 
-  /* Status Colors */
-  --color-success: #10B981;
-  --color-success-muted: rgba(16, 185, 129, 0.1);
-  --color-error: #EF4444;
-  --color-error-muted: rgba(239, 68, 68, 0.1);
-  --color-warning: #F59E0B;
-  --color-warning-muted: rgba(245, 158, 11, 0.1);
+  /* Status Colors (muted, professional - WCAG AA compliant) */
+  --color-success: #059669;
+  --color-success-muted: rgba(5, 150, 105, 0.1);
+  --color-error: #DC2626;
+  --color-error-muted: rgba(220, 38, 38, 0.1);
+  --color-warning: #D97706;
+  --color-warning-muted: rgba(217, 119, 6, 0.1);
+  --color-info: #0891B2;
+  --color-info-muted: rgba(8, 145, 178, 0.1);
 
-  /* Chart Palette */
-  --color-chart-1: #0052FF;
-  --color-chart-2: #10B981;
-  --color-chart-3: #8B5CF6;
-  --color-chart-4: #F59E0B;
-  --color-chart-5: #EC4899;
-  --color-chart-6: #06B6D4;
+  /* Chart Palette (Tailwind 600-level - muted, harmonious) */
+  --color-chart-primary: #4F46E5;
+  --color-chart-secondary: #6366F1;
+  --color-chart-success: #059669;
+  --color-chart-error: #DC2626;
+  --color-chart-purple: #7C3AED;
+  --color-chart-amber: #D97706;
+  --color-chart-pink: #DB2777;
+  --color-chart-cyan: #0891B2;
+  --color-chart-teal: #0D9488;
+  --color-chart-slate: #475569;
 
-  /* Inverted Section */
+  /* Token Chart Colors (matches chart palette) */
+  --color-token-input: #4F46E5;
+  --color-token-output: #059669;
+
+  /* Ring/Focus */
+  --color-ring: rgba(79, 70, 229, 0.5);
+
+  /* Inverted Section (dark panels) */
   --color-inverted-bg: #0F172A;
   --color-inverted-text: rgba(255, 255, 255, 0.95);
   --color-inverted-muted: rgba(255, 255, 255, 0.6);

@@ -205,9 +205,9 @@ function Calendar({
                 onMouseEnter={() => onDateHover(date)}
                 onMouseLeave={() => onDateHover(null)}
                 className={`absolute inset-0 m-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors
-                  ${isFuture ? "cursor-not-allowed text-muted-foreground/40" : "cursor-pointer hover:bg-muted"}
-                  ${isStart || isEnd ? "bg-foreground text-background" : ""}
-                  ${isToday && !isStart && !isEnd ? "ring-1 ring-foreground" : ""}
+                  ${isFuture ? "cursor-not-allowed text-muted-foreground/40" : "cursor-pointer"}
+                  ${isStart || isEnd ? "bg-accent text-white" : "text-foreground hover:bg-accent/20"}
+                  ${isToday && !isStart && !isEnd ? "ring-1 ring-accent" : ""}
                 `}
               >
                 {date.getDate()}

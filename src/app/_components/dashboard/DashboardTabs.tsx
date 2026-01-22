@@ -20,15 +20,15 @@ interface DashboardTabsProps {
 
 export function DashboardTabs({ activeTab, onTabChange }: DashboardTabsProps) {
   return (
-    <div className="flex gap-1 rounded-lg bg-muted p-1">
+    <div className="inline-flex h-10 items-center rounded-lg bg-muted p-1 text-muted-foreground">
       {TABS.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+          className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
             activeTab === tab.id
-              ? "bg-card text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
           {tab.label}

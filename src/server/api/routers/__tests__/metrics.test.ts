@@ -1,4 +1,140 @@
 import { describe, it, expect } from 'vitest';
+import {
+  formatNumber,
+  formatPercent,
+  formatCurrency,
+  formatDuration,
+  formatTokens,
+  formatDateShort,
+  formatDateLong,
+} from '~/lib/format';
+
+// ============================================================================
+// TESTS FOR ACTUAL FORMAT UTILITIES (from ~/lib/format.ts)
+// ============================================================================
+
+describe('Format Utilities (actual implementation)', () => {
+  describe('formatNumber', () => {
+    it('should format numbers with commas', () => {
+      expect(formatNumber(1234)).toBe('1,234');
+      expect(formatNumber(1234567)).toBe('1,234,567');
+      expect(formatNumber(0)).toBe('0');
+    });
+
+    it('should handle decimals when specified', () => {
+      expect(formatNumber(123.456, 2)).toBe('123.46');
+      expect(formatNumber(1234.5, 1)).toBe('1,234.5');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatNumber(null)).toBe('--');
+      expect(formatNumber(undefined)).toBe('--');
+    });
+
+    it('should handle non-finite numbers', () => {
+      expect(formatNumber(NaN)).toBe('--');
+      expect(formatNumber(Infinity)).toBe('--');
+      expect(formatNumber(-Infinity)).toBe('--');
+    });
+  });
+
+  describe('formatPercent', () => {
+    it('should format percentages with one decimal', () => {
+      expect(formatPercent(94.25)).toBe('94.3%');
+      expect(formatPercent(100)).toBe('100.0%');
+      expect(formatPercent(0)).toBe('0.0%');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatPercent(null)).toBe('--');
+      expect(formatPercent(undefined)).toBe('--');
+    });
+  });
+
+  describe('formatCurrency', () => {
+    it('should format as USD with two decimals', () => {
+      expect(formatCurrency(45.67)).toBe('$45.67');
+      expect(formatCurrency(1234.5)).toBe('$1,234.50');
+      expect(formatCurrency(0)).toBe('$0.00');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatCurrency(null)).toBe('--');
+      expect(formatCurrency(undefined)).toBe('--');
+    });
+  });
+
+  describe('formatDuration', () => {
+    it('should format milliseconds to human readable', () => {
+      expect(formatDuration(12300)).toBe('12.3s');
+      expect(formatDuration(135000)).toBe('2m 15s');
+      expect(formatDuration(60000)).toBe('1m 0s');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatDuration(null)).toBe('--');
+      expect(formatDuration(undefined)).toBe('--');
+    });
+
+    it('should handle negative values gracefully', () => {
+      expect(formatDuration(-1000)).toBe('--');
+    });
+  });
+
+  describe('formatTokens', () => {
+    it('should format large token numbers with K/M suffix', () => {
+      expect(formatTokens(500)).toBe('500');
+      expect(formatTokens(1500)).toBe('1.5K');
+      expect(formatTokens(1500000)).toBe('1.5M');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatTokens(null)).toBe('--');
+      expect(formatTokens(undefined)).toBe('--');
+    });
+  });
+
+  describe('formatDateShort', () => {
+    it('should format dates for chart axis labels', () => {
+      const date = new Date('2024-01-15T10:00:00Z');
+      const result = formatDateShort(date);
+      expect(result).toContain('Jan');
+      expect(result).toContain('15');
+    });
+
+    it('should handle string dates', () => {
+      const result = formatDateShort('2024-01-15T10:00:00Z');
+      expect(result).toContain('Jan');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatDateShort(null)).toBe('--');
+      expect(formatDateShort(undefined)).toBe('--');
+    });
+
+    it('should handle invalid date strings gracefully', () => {
+      expect(formatDateShort('invalid-date')).toBe('--');
+    });
+  });
+
+  describe('formatDateLong', () => {
+    it('should format dates for tooltips', () => {
+      const date = new Date('2024-01-15T10:00:00Z');
+      const result = formatDateLong(date);
+      expect(result).toContain('Jan');
+      expect(result).toContain('15');
+    });
+
+    it('should handle null/undefined gracefully', () => {
+      expect(formatDateLong(null)).toBe('--');
+      expect(formatDateLong(undefined)).toBe('--');
+    });
+  });
+});
+
+// ============================================================================
+// TESTS FOR AGGREGATION LOGIC (helper functions)
+// ============================================================================
 
 // Helper functions extracted from the metrics router for testing
 // These represent the core aggregation logic
@@ -265,66 +401,6 @@ describe('Metrics Aggregation Logic', () => {
 
       const result = filterByModel(records, undefined);
       expect(result.length).toBe(2);
-    });
-  });
-});
-
-describe('Format Utilities', () => {
-  // Testing the format utilities since they're critical for display
-
-  describe('formatNumber', () => {
-    it('should format numbers with commas', () => {
-      // We're testing the logic pattern that format.ts uses
-      const formatNumber = (num: number) =>
-        new Intl.NumberFormat('en-US').format(Math.round(num));
-
-      expect(formatNumber(1234)).toBe('1,234');
-      expect(formatNumber(1234567)).toBe('1,234,567');
-      expect(formatNumber(0)).toBe('0');
-    });
-  });
-
-  describe('formatPercent', () => {
-    it('should format percentages with one decimal', () => {
-      const formatPercent = (num: number) => `${num.toFixed(1)}%`;
-
-      expect(formatPercent(94.25)).toBe('94.3%');
-      expect(formatPercent(100)).toBe('100.0%');
-      expect(formatPercent(0)).toBe('0.0%');
-    });
-  });
-
-  describe('formatCurrency', () => {
-    it('should format as USD with two decimals', () => {
-      const formatCurrency = (num: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(num);
-
-      expect(formatCurrency(45.67)).toBe('$45.67');
-      expect(formatCurrency(1234.5)).toBe('$1,234.50');
-      expect(formatCurrency(0)).toBe('$0.00');
-    });
-  });
-
-  describe('formatDuration', () => {
-    it('should format milliseconds to human readable', () => {
-      const formatDuration = (ms: number) => {
-        const seconds = ms / 1000;
-        if (seconds < 60) {
-          return `${seconds.toFixed(1)}s`;
-        }
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = Math.round(seconds % 60);
-        return `${minutes}m ${remainingSeconds}s`;
-      };
-
-      expect(formatDuration(12300)).toBe('12.3s');
-      expect(formatDuration(135000)).toBe('2m 15s');
-      expect(formatDuration(60000)).toBe('1m 0s');
     });
   });
 });

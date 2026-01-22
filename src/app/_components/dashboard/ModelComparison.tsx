@@ -54,7 +54,7 @@ export function ModelComparison({ data, isLoading }: ModelComparisonProps) {
             dataKey="model"
             {...chartConfig.yAxis}
             width={120}
-            tick={{ fill: '#334155', fontSize: 12, fontWeight: 500 }}
+            tick={{ fill: '#64748B', fontSize: 12, fontWeight: 500 }}
           />
           <Tooltip
             {...chartConfig.tooltip}
@@ -84,17 +84,7 @@ export function ModelComparison({ data, isLoading }: ModelComparisonProps) {
                 <td className="px-2 py-2 font-medium">{row.model}</td>
                 <td className="px-2 py-2 text-right tabular-nums">{formatNumber(row.totalRuns)}</td>
                 <td className="px-2 py-2 text-right tabular-nums">
-                  <span
-                    className={
-                      row.successRate >= 90
-                        ? "text-success"
-                        : row.successRate >= 70
-                          ? "text-warning"
-                          : "text-error"
-                    }
-                  >
-                    {formatPercent(row.successRate)}
-                  </span>
+                  {formatPercent(row.successRate)}
                 </td>
                 <td className="px-2 py-2 text-right tabular-nums">{formatDuration(row.avgDurationMs)}</td>
                 <td className="px-2 py-2 text-right tabular-nums">

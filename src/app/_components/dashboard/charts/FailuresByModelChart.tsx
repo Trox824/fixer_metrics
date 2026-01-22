@@ -81,7 +81,7 @@ export function FailuresByModelChart({ data, isLoading }: FailuresByModelChartPr
             dataKey="model"
             {...chartConfig.yAxis}
             width={120}
-            tick={{ fill: "#334155", fontSize: 12, fontWeight: 500 }}
+            tick={{ fill: "#64748B", fontSize: 12, fontWeight: 500 }}
           />
           <Tooltip
             {...chartConfig.tooltip}
@@ -119,19 +119,9 @@ export function FailuresByModelChart({ data, isLoading }: FailuresByModelChartPr
                 <td className="px-2 py-2 font-medium">{row.model}</td>
                 <td className="px-2 py-2 text-right tabular-nums">{formatNumber(row.failureCount)}</td>
                 <td className="px-2 py-2 text-right tabular-nums">
-                  <span
-                    className={
-                      row.failureRate <= 5
-                        ? "text-success"
-                        : row.failureRate <= 15
-                          ? "text-warning"
-                          : "text-error"
-                    }
-                  >
-                    {formatPercent(row.failureRate)}
-                  </span>
+                  {formatPercent(row.failureRate)}
                 </td>
-                <td className="px-2 py-2 text-right tabular-nums text-error">
+                <td className="px-2 py-2 text-right tabular-nums">
                   {formatCurrency(row.wastedCost)}
                 </td>
               </tr>

@@ -21,14 +21,13 @@ const handler = (req: NextRequest) =>
     req,
     router: appRouter,
     createContext: () => createContext(req),
-    onError:
-      env.NODE_ENV === "development"
-        ? ({ path, error }) => {
-            console.error(
-              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
-            );
-          }
-        : undefined,
+    onError: ({ path, error }) => {
+      // Always log errors (in production, consider sending to monitoring service like Sentry)
+      console.error(
+        `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
+      );
+      // In production, you could add: Sentry.captureException(error, { extra: { path } });
+    },
   });
 
 export { handler as GET, handler as POST };

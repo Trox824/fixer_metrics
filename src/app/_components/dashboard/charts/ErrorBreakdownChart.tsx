@@ -8,7 +8,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Cell,
 } from "recharts";
 import { chartConfig, CHART_COLORS } from "~/lib/chart-config";
 import { formatNumber, formatCurrency } from "~/lib/format";
@@ -78,7 +77,7 @@ export function ErrorBreakdownChart({ data, isLoading }: ErrorBreakdownChartProp
             dataKey="displayMessage"
             {...chartConfig.yAxis}
             width={180}
-            tick={{ fill: "#334155", fontSize: 11, fontWeight: 500 }}
+            tick={{ fill: "#64748B", fontSize: 11, fontWeight: 500 }}
           />
           <Tooltip
             {...chartConfig.tooltip}
@@ -96,11 +95,12 @@ export function ErrorBreakdownChart({ data, isLoading }: ErrorBreakdownChartProp
               return String(label);
             }}
           />
-          <Bar dataKey="count" name="count" radius={[0, 4, 4, 0]}>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={CHART_COLORS.error} fillOpacity={0.8 - index * 0.05} />
-            ))}
-          </Bar>
+          <Bar
+            dataKey="count"
+            name="count"
+            fill={CHART_COLORS.error}
+            radius={[0, 4, 4, 0]}
+          />
         </BarChart>
       </ResponsiveContainer>
 
@@ -121,7 +121,7 @@ export function ErrorBreakdownChart({ data, isLoading }: ErrorBreakdownChartProp
                   {truncateMessage(row.errorMessage, 50)}
                 </td>
                 <td className="px-2 py-2 text-right tabular-nums">{formatNumber(row.count)}</td>
-                <td className="px-2 py-2 text-right tabular-nums text-error">
+                <td className="px-2 py-2 text-right tabular-nums">
                   {formatCurrency(row.wastedCost)}
                 </td>
               </tr>

@@ -47,33 +47,33 @@ export function OverviewTab({
       {/* Charts Row 1 */}
       <div className="grid gap-5 lg:grid-cols-2">
         <ChartCard
-          title="Executions Over Time"
-          subtitle={`Daily execution count${getFilterContext(model)}`}
-        >
-          <ExecutionsChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-        <ChartCard
           title="Success / Failure Rate"
           subtitle={`Daily breakdown by status${getFilterContext(model)}`}
         >
           <SuccessRateChart data={timeSeries} isLoading={timeSeriesLoading} />
+        </ChartCard>
+        <ChartCard
+          title="Executions Over Time"
+          subtitle={`Daily execution count${getFilterContext(model)}`}
+        >
+          <ExecutionsChart data={timeSeries} isLoading={timeSeriesLoading} />
         </ChartCard>
       </div>
 
       {/* Charts Row 2 */}
       <div className="grid gap-5 lg:grid-cols-2">
         <ChartCard
+          title="Model Comparison"
+          subtitle="Performance metrics by model"
+        >
+          <ModelComparison data={modelComparison} isLoading={modelComparisonLoading} />
+        </ChartCard>
+        <ChartCard
           title="Duration Trend"
           subtitle={`Average execution time${getFilterContext(model)}`}
           correlationHint="Includes non-LLM time"
         >
           <DurationChart data={timeSeries} isLoading={timeSeriesLoading} />
-        </ChartCard>
-        <ChartCard
-          title="Model Comparison"
-          subtitle="Performance metrics by model"
-        >
-          <ModelComparison data={modelComparison} isLoading={modelComparisonLoading} />
         </ChartCard>
       </div>
     </div>

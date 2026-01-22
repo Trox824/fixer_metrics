@@ -2,12 +2,91 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { Prisma } from "../../../../generated/prisma";
 
-const filterSchema = z.object({
+// ============================================================================
+// SCHEMAS
+// ============================================================================
+
+// Base schema for extension (without refine)
+const filterSchemaBase = z.object({
   startDate: z.date(),
   endDate: z.date(),
   status: z.enum(["all", "success", "failure"]).optional().default("all"),
   model: z.string().optional(),
 });
+
+// Full schema with validation (for endpoints that don't extend)
+const filterSchema = filterSchemaBase.refine(
+  (data) => data.startDate <= data.endDate,
+  {
+    message: "startDate must be before or equal to endDate",
+    path: ["endDate"],
+  }
+);
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+// Granularity whitelist to prevent SQL injection (validated by zod, but extra safety)
+const GRANULARITY_MAP = { hour: "hour", day: "day", week: "week" } as const;
+type Granularity = keyof typeof GRANULARITY_MAP;
+
+/**
+ * Build a Prisma WHERE clause from filter input.
+ * Used for standard Prisma queries (aggregate, groupBy, findMany).
+ */
+function buildWhereClause(input: {
+  startDate: Date;
+  endDate: Date;
+  status?: string;
+  model?: string;
+}): Prisma.AgentExecutionWhereInput {
+  return {
+    startTime: {
+      gte: input.startDate,
+      lte: input.endDate,
+    },
+    ...(input.status && input.status !== "all" && { status: input.status }),
+    ...(input.model && { model: input.model }),
+  };
+}
+
+/**
+ * Build a raw SQL WHERE clause using Prisma.sql for parameterized queries.
+ * Used for raw SQL queries requiring DATE_TRUNC and FILTER clauses.
+ */
+function buildSqlConditions(input: {
+  startDate: Date;
+  endDate: Date;
+  status?: string;
+  model?: string;
+}): Prisma.Sql {
+  const conditions: Prisma.Sql[] = [
+    Prisma.sql`"startTime" >= ${input.startDate}`,
+    Prisma.sql`"startTime" <= ${input.endDate}`,
+  ];
+  if (input.status && input.status !== "all") {
+    conditions.push(Prisma.sql`"status" = ${input.status}`);
+  }
+  if (input.model) {
+    conditions.push(Prisma.sql`"model" = ${input.model}`);
+  }
+  return Prisma.join(conditions, " AND ");
+}
+
+/**
+ * Calculate success rate based on status filter.
+ * When filtering by status, the rate is deterministic (100% for success, 0% for failure).
+ */
+function calculateFilteredSuccessRate(
+  status: string,
+  totalRuns: number,
+  successCount: number
+): number {
+  if (status === "success") return 100;
+  if (status === "failure") return 0;
+  return totalRuns > 0 ? (successCount / totalRuns) * 100 : 0;
+}
 
 export const metricsRouter = createTRPCRouter({
   /**
@@ -133,7 +212,7 @@ export const metricsRouter = createTRPCRouter({
    */
   getTimeSeries: publicProcedure
     .input(
-      filterSchema.extend({
+      filterSchemaBase.extend({
         granularity: z.enum(["hour", "day", "week"]).default("day"),
       })
     )
@@ -210,7 +289,7 @@ export const metricsRouter = createTRPCRouter({
    */
   getRunsList: publicProcedure
     .input(
-      filterSchema.extend({
+      filterSchemaBase.extend({
         cursor: z.string().optional(),
         limit: z.number().min(1).max(100).default(20),
       })
@@ -382,7 +461,7 @@ export const metricsRouter = createTRPCRouter({
    */
   getFailureTrend: publicProcedure
     .input(
-      filterSchema.extend({
+      filterSchemaBase.extend({
         granularity: z.enum(["hour", "day", "week"]).default("day"),
       })
     )

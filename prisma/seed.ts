@@ -14,7 +14,8 @@ const MODELS = [
   { name: "claude-haiku-4-5", inputCost: 0.8, outputCost: 4 },
 ] as const;
 
-const STATUSES = ["success", "failure", "error"] as const;
+// Status values must match API schema: only "success" and "failure" are valid
+const STATUSES = ["success", "failure"] as const;
 
 // Error messages for failures
 const ERROR_MESSAGES = [
@@ -135,14 +136,9 @@ async function main() {
     const isIncidentDay = incidentDays.includes(daysAgo);
     const failureChance = isIncidentDay ? 0.4 : 0.1; // 40% vs 10%
 
-    // Determine status
-    let status: (typeof STATUSES)[number];
-    const rand = Math.random();
-    if (rand < failureChance) {
-      status = Math.random() < 0.7 ? "failure" : "error";
-    } else {
-      status = "success";
-    }
+    // Determine status (only success or failure, matching API schema)
+    const status: (typeof STATUSES)[number] =
+      Math.random() < failureChance ? "failure" : "success";
 
     // Duration: 5-120 seconds, normal distribution centered at 45s
     const durationMs = Math.floor(normalRandom(45000, 20000));

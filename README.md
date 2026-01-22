@@ -125,42 +125,6 @@ Server-Side Aggregation:
 
 ---
 
-### 3b. Raw SQL for Advanced Aggregations
-
-**Decision:** Use Prisma's `$queryRaw` for time-bucketing and conditional aggregation queries.
-
-**Why Raw SQL?** Prisma ORM doesn't support these PostgreSQL-specific features:
-
-| Feature | PostgreSQL Syntax | Prisma Support |
-|---------|-------------------|----------------|
-| Time bucketing | `DATE_TRUNC('day', timestamp)` | ❌ Not supported ([Issue #6653](https://github.com/prisma/prisma/issues/6653)) |
-| Conditional count | `COUNT(*) FILTER (WHERE status='failure')` | ❌ Not supported ([Issue #6570](https://github.com/prisma/prisma/issues/6570)) |
-
-**Affected Endpoints:**
-- `getTimeSeries` - requires `DATE_TRUNC` for hour/day/week bucketing
-- `getFailureTrend` - requires both `DATE_TRUNC` and `COUNT FILTER`
-
-**Why Not Fetch-and-Process in JS?**
-```
-Raw SQL Approach:
-  DB does aggregation → Returns 30 rows (one per day)
-  Network: ~2KB, CPU: Database-optimized
-
-JS Processing Approach:
-  DB returns all rows → 10,000 rows to browser/server
-  Network: ~2MB, CPU: Single-threaded JS loop
-  Memory: Hold entire dataset in memory
-```
-
-**Safety Measures:**
-- All queries use `Prisma.sql` template literals for parameterized queries
-- Granularity values whitelisted via Zod validation + explicit mapping
-- No string concatenation in SQL construction
-
-**Code Location:** `src/server/api/routers/metrics.ts:150-181, 387-404`
-
----
-
 ### 4. Time Bucketing: Daily Default
 
 **Decision:** Default to daily aggregation with option for hourly/weekly.
@@ -411,28 +375,6 @@ Duration    → AVG(durationMs) per day
 
 ---
 
-## What I'd Add With More Time
-
-### High Priority
-1. **Run detail view:** Click a data point → see individual executions
-2. **URL-persisted filters:** Shareable dashboard links
-3. **Date range picker:** Proper calendar component
-4. **Loading states:** Skeleton loaders for better UX
-
-### Medium Priority
-5. **Anomaly highlighting:** Flag runs >2σ from mean
-6. **Export to CSV:** Download filtered data
-7. **Error categorization:** Group errors by pattern
-8. **Real-time updates:** Polling or WebSocket
-
-### Nice to Have
-9. **Dark mode:** Better for monitoring dashboards
-10. **Mobile responsive:** Collapsible sidebar, stacked charts
-11. **Comparison mode:** Model A vs B side-by-side
-12. **Alerts configuration:** Email when failure rate >X%
-
----
-
 ## Data Modeling for Scale
 
 **Current design works for:** ~100k rows, single dashboard user
@@ -605,4 +547,66 @@ DATABASE_URL="postgresql://user:password@localhost:5432/fixer_metrics"
 
 ## License
 
-Private - Take-home assignment for [Company Name]
+
+  #        │                Question                 │   Status   │                  Where Shown                   │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ COST           │                                         │            │                                                │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 1              │ How much are we spending daily?         │ ✅ Yes     │ CostChart (Overview tab)                       │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 2              │ What's the cost per run?                │ ✅ Yes     │ CostChart (dual Y-axis)                        │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 3              │ Cost per successful run?                │ ✅ Yes     │ KPICards "Cost/Success" + EfficiencyTab        │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 4              │ How much wasted on failures?            │ ✅ Yes     │ KPICards "Wasted Spend" + ErrorsTab            │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 5              │ Which model costs most per run?         │ ❌ No      │ ModelComparison shows total cost, not cost/run │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ RELIABILITY    │                                         │            │                                                │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 6              │ Overall success rate?                   │ ✅ Yes     │ KPICards "Success Rate"                        │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 7              │ Success rate trend over time?           │ ✅ Yes     │ SuccessRateChart                               │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 8              │ Success rate by model?                  │ ✅ Yes     │ ModelComparison table                          │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 9              │ What errors are occurring?              │ ✅ Yes     │ ErrorBreakdownChart (Errors tab)               │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 10             │ Error frequency by type?                │ ✅ Yes     │ ErrorBreakdownChart (grouped, top 10)          │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ PERFORMANCE    │                                         │            │                                                │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 11             │ Average run duration?                   │ ✅ Yes     │ KPICards "Avg Duration"                        │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 12             │ Duration trend over time?               │ ✅ Yes     │ DurationChart                                  │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 13             │ Which model is fastest?                 │ ✅ Yes     │ ModelComparison "Avg Duration" column          │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 14             │ Duration by status?                     │ ❌ No      │ Not split by success/failure                   │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ TOKEN USAGE    │                                         │            │                                                │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 15             │ Total tokens consumed daily?            │ ✅ Yes     │ TokenUsageChart                                │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 16             │ Input vs output token split?            │ ✅ Yes     │ TokenUsageChart (stacked)                      │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 17             │ Tokens per run?                         │ ✅ Yes     │ EfficiencyTab "Tokens per Run" KPI             │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 18             │ Cache hit rate?                         │ ✅ Yes     │ EfficiencyTab KPI + CacheChart                 │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 19             │ Cache efficiency by model?              │ ❌ No      │ Only overall, not per model                    │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ AGENT BEHAVIOR │                                         │            │                                                │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 20             │ Avg LLM calls per run?                  │ ⚠️ Partial │ API returns it, not prominently displayed      │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 21             │ Avg tool calls per run?                 │ ⚠️ Partial │ API returns it, not prominently displayed      │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 22             │ Files modified per run?                 │ ✅ Yes     │ ModelComparison "Avg Files" column             │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 23             │ LLM calls vs tool calls ratio?          │ ❌ No      │ Not calculated                                 │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 24             │ Does more LLM calls = higher cost?      │ ❌ No      │ No correlation chart                           │                                                    
+  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
+  │ 25             │ Does more tool calls = longer duration? │ ❌ No      │ No correlation chart                           │                                                    
+  └────────────────┴─────────────────────────────────────────┴────────────┴────────────────────────────────────────────────┘  
