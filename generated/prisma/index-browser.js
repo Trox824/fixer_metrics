@@ -121,11 +121,30 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.PostScalarFieldEnum = {
+exports.Prisma.AgentExecutionScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  feedId: 'feedId',
+  runStartId: 'runStartId',
+  invocationId: 'invocationId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  model: 'model',
+  llmCallCount: 'llmCallCount',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  totalTokens: 'totalTokens',
+  cacheCreationInputTokens: 'cacheCreationInputTokens',
+  cacheReadInputTokens: 'cacheReadInputTokens',
+  toolCallsCount: 'toolCallsCount',
+  modifiedFiles: 'modifiedFiles',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  durationMs: 'durationMs',
+  taskIndex: 'taskIndex',
+  temperature: 'temperature',
+  maxTokens: 'maxTokens',
+  reportedCostUsd: 'reportedCostUsd',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -138,9 +157,14 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-  Post: 'Post'
+  AgentExecution: 'AgentExecution'
 };
 
 /**

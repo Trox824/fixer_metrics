@@ -11,11 +11,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model AgentExecution {
+  id                       String    @id @default(cuid())
+  feedId                   Int?
+  runStartId               Int?
+  invocationId             String?   @unique
+  status                   String // 'success' | 'failure'
+  errorMessage             String?
+  model                    String
+  llmCallCount             Int
+  inputTokens              Int
+  outputTokens             Int
+  totalTokens              Int
+  cacheCreationInputTokens Int?
+  cacheReadInputTokens     Int?
+  toolCallsCount           Int
+  modifiedFiles            String[]
+  startTime                DateTime
+  endTime                  DateTime?
+  durationMs               Int?
+  taskIndex                Int?
+  temperature              Float?
+  maxTokens                Int?
+  reportedCostUsd          Decimal?  @db.Decimal(10, 6)
 
-  @@index([name])
+  createdAt DateTime @default(now())
+
+  @@index([startTime])
+  @@index([status])
+  @@index([model])
+  // Composite indexes for common query patterns
+  @@index([startTime, status])
+  @@index([startTime, model])
 }

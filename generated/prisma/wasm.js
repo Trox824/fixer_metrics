@@ -93,11 +93,30 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.PostScalarFieldEnum = {
+exports.Prisma.AgentExecutionScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  feedId: 'feedId',
+  runStartId: 'runStartId',
+  invocationId: 'invocationId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  model: 'model',
+  llmCallCount: 'llmCallCount',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  totalTokens: 'totalTokens',
+  cacheCreationInputTokens: 'cacheCreationInputTokens',
+  cacheReadInputTokens: 'cacheReadInputTokens',
+  toolCallsCount: 'toolCallsCount',
+  modifiedFiles: 'modifiedFiles',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  durationMs: 'durationMs',
+  taskIndex: 'taskIndex',
+  temperature: 'temperature',
+  maxTokens: 'maxTokens',
+  reportedCostUsd: 'reportedCostUsd',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -110,9 +129,14 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
-  Post: 'Post'
+  AgentExecution: 'AgentExecution'
 };
 /**
  * Create the Client
@@ -153,6 +177,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -161,13 +186,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  name      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n}\n",
-  "inlineSchemaHash": "4dfee2d805d63053d5ae63a6ff65a5c68e353713bdd4147909d9158ea83d8e0f",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel AgentExecution {\n  id                       String    @id @default(cuid())\n  feedId                   Int?\n  runStartId               Int?\n  invocationId             String?   @unique\n  status                   String // 'success' | 'failure' | 'error'\n  errorMessage             String?\n  model                    String\n  llmCallCount             Int\n  inputTokens              Int\n  outputTokens             Int\n  totalTokens              Int\n  cacheCreationInputTokens Int?\n  cacheReadInputTokens     Int?\n  toolCallsCount           Int\n  modifiedFiles            String[]\n  startTime                DateTime\n  endTime                  DateTime?\n  durationMs               Int?\n  taskIndex                Int?\n  temperature              Float?\n  maxTokens                Int?\n  reportedCostUsd          Decimal?  @db.Decimal(10, 6)\n\n  createdAt DateTime @default(now())\n\n  @@index([startTime])\n  @@index([status])\n  @@index([model])\n  // Composite indexes for common query patterns\n  @@index([startTime, status])\n  @@index([startTime, model])\n}\n",
+  "inlineSchemaHash": "59ff3fdf32f0f8669830b333d39d1626b2e7a267efb09bae3994cb6002239d2e",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"AgentExecution\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"feedId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"runStartId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"invocationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"model\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"llmCallCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"inputTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"outputTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"totalTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cacheCreationInputTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cacheReadInputTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"toolCallsCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"modifiedFiles\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"durationMs\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"taskIndex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"temperature\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"maxTokens\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"reportedCostUsd\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

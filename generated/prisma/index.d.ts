@@ -14,10 +14,10 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
- * Model Post
+ * Model AgentExecution
  * 
  */
-export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
+export type AgentExecution = $Result.DefaultSelection<Prisma.$AgentExecutionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -26,8 +26,8 @@ export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Posts
- * const posts = await prisma.post.findMany()
+ * // Fetch zero or more AgentExecutions
+ * const agentExecutions = await prisma.agentExecution.findMany()
  * ```
  *
  *
@@ -47,8 +47,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Posts
-   * const posts = await prisma.post.findMany()
+   * // Fetch zero or more AgentExecutions
+   * const agentExecutions = await prisma.agentExecution.findMany()
    * ```
    *
    *
@@ -138,14 +138,14 @@ export class PrismaClient<
   }>>
 
       /**
-   * `prisma.post`: Exposes CRUD operations for the **Post** model.
+   * `prisma.agentExecution`: Exposes CRUD operations for the **AgentExecution** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Posts
-    * const posts = await prisma.post.findMany()
+    * // Fetch zero or more AgentExecutions
+    * const agentExecutions = await prisma.agentExecution.findMany()
     * ```
     */
-  get post(): Prisma.PostDelegate<ExtArgs, ClientOptions>;
+  get agentExecution(): Prisma.AgentExecutionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -587,7 +587,7 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Post: 'Post'
+    AgentExecution: 'AgentExecution'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -606,81 +606,81 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "post"
+      modelProps: "agentExecution"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
-      Post: {
-        payload: Prisma.$PostPayload<ExtArgs>
-        fields: Prisma.PostFieldRefs
+      AgentExecution: {
+        payload: Prisma.$AgentExecutionPayload<ExtArgs>
+        fields: Prisma.AgentExecutionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.PostFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload> | null
+            args: Prisma.AgentExecutionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.PostFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.AgentExecutionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>
           }
           findFirst: {
-            args: Prisma.PostFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload> | null
+            args: Prisma.AgentExecutionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.PostFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.AgentExecutionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>
           }
           findMany: {
-            args: Prisma.PostFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>[]
+            args: Prisma.AgentExecutionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>[]
           }
           create: {
-            args: Prisma.PostCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.AgentExecutionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>
           }
           createMany: {
-            args: Prisma.PostCreateManyArgs<ExtArgs>
+            args: Prisma.AgentExecutionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.PostCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>[]
+            args: Prisma.AgentExecutionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>[]
           }
           delete: {
-            args: Prisma.PostDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.AgentExecutionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>
           }
           update: {
-            args: Prisma.PostUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.AgentExecutionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>
           }
           deleteMany: {
-            args: Prisma.PostDeleteManyArgs<ExtArgs>
+            args: Prisma.AgentExecutionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.PostUpdateManyArgs<ExtArgs>
+            args: Prisma.AgentExecutionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.PostUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>[]
+            args: Prisma.AgentExecutionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>[]
           }
           upsert: {
-            args: Prisma.PostUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.AgentExecutionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AgentExecutionPayload>
           }
           aggregate: {
-            args: Prisma.PostAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePost>
+            args: Prisma.AgentExecutionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAgentExecution>
           }
           groupBy: {
-            args: Prisma.PostGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PostGroupByOutputType>[]
+            args: Prisma.AgentExecutionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AgentExecutionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.PostCountArgs<ExtArgs>
-            result: $Utils.Optional<PostCountAggregateOutputType> | number
+            args: Prisma.AgentExecutionCountArgs<ExtArgs>
+            result: $Utils.Optional<AgentExecutionCountAggregateOutputType> | number
           }
         }
       }
@@ -780,7 +780,7 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
-    post?: PostOmit
+    agentExecution?: AgentExecutionOmit
   }
 
   /* Types for Logging */
@@ -862,358 +862,634 @@ export namespace Prisma {
    */
 
   /**
-   * Model Post
+   * Model AgentExecution
    */
 
-  export type AggregatePost = {
-    _count: PostCountAggregateOutputType | null
-    _avg: PostAvgAggregateOutputType | null
-    _sum: PostSumAggregateOutputType | null
-    _min: PostMinAggregateOutputType | null
-    _max: PostMaxAggregateOutputType | null
+  export type AggregateAgentExecution = {
+    _count: AgentExecutionCountAggregateOutputType | null
+    _avg: AgentExecutionAvgAggregateOutputType | null
+    _sum: AgentExecutionSumAggregateOutputType | null
+    _min: AgentExecutionMinAggregateOutputType | null
+    _max: AgentExecutionMaxAggregateOutputType | null
   }
 
-  export type PostAvgAggregateOutputType = {
-    id: number | null
+  export type AgentExecutionAvgAggregateOutputType = {
+    feedId: number | null
+    runStartId: number | null
+    llmCallCount: number | null
+    inputTokens: number | null
+    outputTokens: number | null
+    totalTokens: number | null
+    cacheCreationInputTokens: number | null
+    cacheReadInputTokens: number | null
+    toolCallsCount: number | null
+    durationMs: number | null
+    taskIndex: number | null
+    temperature: number | null
+    maxTokens: number | null
+    reportedCostUsd: Decimal | null
   }
 
-  export type PostSumAggregateOutputType = {
-    id: number | null
+  export type AgentExecutionSumAggregateOutputType = {
+    feedId: number | null
+    runStartId: number | null
+    llmCallCount: number | null
+    inputTokens: number | null
+    outputTokens: number | null
+    totalTokens: number | null
+    cacheCreationInputTokens: number | null
+    cacheReadInputTokens: number | null
+    toolCallsCount: number | null
+    durationMs: number | null
+    taskIndex: number | null
+    temperature: number | null
+    maxTokens: number | null
+    reportedCostUsd: Decimal | null
   }
 
-  export type PostMinAggregateOutputType = {
-    id: number | null
-    name: string | null
+  export type AgentExecutionMinAggregateOutputType = {
+    id: string | null
+    feedId: number | null
+    runStartId: number | null
+    invocationId: string | null
+    status: string | null
+    errorMessage: string | null
+    model: string | null
+    llmCallCount: number | null
+    inputTokens: number | null
+    outputTokens: number | null
+    totalTokens: number | null
+    cacheCreationInputTokens: number | null
+    cacheReadInputTokens: number | null
+    toolCallsCount: number | null
+    startTime: Date | null
+    endTime: Date | null
+    durationMs: number | null
+    taskIndex: number | null
+    temperature: number | null
+    maxTokens: number | null
+    reportedCostUsd: Decimal | null
     createdAt: Date | null
-    updatedAt: Date | null
   }
 
-  export type PostMaxAggregateOutputType = {
-    id: number | null
-    name: string | null
+  export type AgentExecutionMaxAggregateOutputType = {
+    id: string | null
+    feedId: number | null
+    runStartId: number | null
+    invocationId: string | null
+    status: string | null
+    errorMessage: string | null
+    model: string | null
+    llmCallCount: number | null
+    inputTokens: number | null
+    outputTokens: number | null
+    totalTokens: number | null
+    cacheCreationInputTokens: number | null
+    cacheReadInputTokens: number | null
+    toolCallsCount: number | null
+    startTime: Date | null
+    endTime: Date | null
+    durationMs: number | null
+    taskIndex: number | null
+    temperature: number | null
+    maxTokens: number | null
+    reportedCostUsd: Decimal | null
     createdAt: Date | null
-    updatedAt: Date | null
   }
 
-  export type PostCountAggregateOutputType = {
+  export type AgentExecutionCountAggregateOutputType = {
     id: number
-    name: number
+    feedId: number
+    runStartId: number
+    invocationId: number
+    status: number
+    errorMessage: number
+    model: number
+    llmCallCount: number
+    inputTokens: number
+    outputTokens: number
+    totalTokens: number
+    cacheCreationInputTokens: number
+    cacheReadInputTokens: number
+    toolCallsCount: number
+    modifiedFiles: number
+    startTime: number
+    endTime: number
+    durationMs: number
+    taskIndex: number
+    temperature: number
+    maxTokens: number
+    reportedCostUsd: number
     createdAt: number
-    updatedAt: number
     _all: number
   }
 
 
-  export type PostAvgAggregateInputType = {
-    id?: true
+  export type AgentExecutionAvgAggregateInputType = {
+    feedId?: true
+    runStartId?: true
+    llmCallCount?: true
+    inputTokens?: true
+    outputTokens?: true
+    totalTokens?: true
+    cacheCreationInputTokens?: true
+    cacheReadInputTokens?: true
+    toolCallsCount?: true
+    durationMs?: true
+    taskIndex?: true
+    temperature?: true
+    maxTokens?: true
+    reportedCostUsd?: true
   }
 
-  export type PostSumAggregateInputType = {
-    id?: true
+  export type AgentExecutionSumAggregateInputType = {
+    feedId?: true
+    runStartId?: true
+    llmCallCount?: true
+    inputTokens?: true
+    outputTokens?: true
+    totalTokens?: true
+    cacheCreationInputTokens?: true
+    cacheReadInputTokens?: true
+    toolCallsCount?: true
+    durationMs?: true
+    taskIndex?: true
+    temperature?: true
+    maxTokens?: true
+    reportedCostUsd?: true
   }
 
-  export type PostMinAggregateInputType = {
+  export type AgentExecutionMinAggregateInputType = {
     id?: true
-    name?: true
+    feedId?: true
+    runStartId?: true
+    invocationId?: true
+    status?: true
+    errorMessage?: true
+    model?: true
+    llmCallCount?: true
+    inputTokens?: true
+    outputTokens?: true
+    totalTokens?: true
+    cacheCreationInputTokens?: true
+    cacheReadInputTokens?: true
+    toolCallsCount?: true
+    startTime?: true
+    endTime?: true
+    durationMs?: true
+    taskIndex?: true
+    temperature?: true
+    maxTokens?: true
+    reportedCostUsd?: true
     createdAt?: true
-    updatedAt?: true
   }
 
-  export type PostMaxAggregateInputType = {
+  export type AgentExecutionMaxAggregateInputType = {
     id?: true
-    name?: true
+    feedId?: true
+    runStartId?: true
+    invocationId?: true
+    status?: true
+    errorMessage?: true
+    model?: true
+    llmCallCount?: true
+    inputTokens?: true
+    outputTokens?: true
+    totalTokens?: true
+    cacheCreationInputTokens?: true
+    cacheReadInputTokens?: true
+    toolCallsCount?: true
+    startTime?: true
+    endTime?: true
+    durationMs?: true
+    taskIndex?: true
+    temperature?: true
+    maxTokens?: true
+    reportedCostUsd?: true
     createdAt?: true
-    updatedAt?: true
   }
 
-  export type PostCountAggregateInputType = {
+  export type AgentExecutionCountAggregateInputType = {
     id?: true
-    name?: true
+    feedId?: true
+    runStartId?: true
+    invocationId?: true
+    status?: true
+    errorMessage?: true
+    model?: true
+    llmCallCount?: true
+    inputTokens?: true
+    outputTokens?: true
+    totalTokens?: true
+    cacheCreationInputTokens?: true
+    cacheReadInputTokens?: true
+    toolCallsCount?: true
+    modifiedFiles?: true
+    startTime?: true
+    endTime?: true
+    durationMs?: true
+    taskIndex?: true
+    temperature?: true
+    maxTokens?: true
+    reportedCostUsd?: true
     createdAt?: true
-    updatedAt?: true
     _all?: true
   }
 
-  export type PostAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Post to aggregate.
+     * Filter which AgentExecution to aggregate.
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of AgentExecutions to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: AgentExecutionOrderByWithRelationInput | AgentExecutionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: AgentExecutionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` AgentExecutions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` AgentExecutions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Posts
+     * Count returned AgentExecutions
     **/
-    _count?: true | PostCountAggregateInputType
+    _count?: true | AgentExecutionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: PostAvgAggregateInputType
+    _avg?: AgentExecutionAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: PostSumAggregateInputType
+    _sum?: AgentExecutionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: PostMinAggregateInputType
+    _min?: AgentExecutionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: PostMaxAggregateInputType
+    _max?: AgentExecutionMaxAggregateInputType
   }
 
-  export type GetPostAggregateType<T extends PostAggregateArgs> = {
-        [P in keyof T & keyof AggregatePost]: P extends '_count' | 'count'
+  export type GetAgentExecutionAggregateType<T extends AgentExecutionAggregateArgs> = {
+        [P in keyof T & keyof AggregateAgentExecution]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregatePost[P]>
-      : GetScalarType<T[P], AggregatePost[P]>
+        : GetScalarType<T[P], AggregateAgentExecution[P]>
+      : GetScalarType<T[P], AggregateAgentExecution[P]>
   }
 
 
 
 
-  export type PostGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostWhereInput
-    orderBy?: PostOrderByWithAggregationInput | PostOrderByWithAggregationInput[]
-    by: PostScalarFieldEnum[] | PostScalarFieldEnum
-    having?: PostScalarWhereWithAggregatesInput
+  export type AgentExecutionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AgentExecutionWhereInput
+    orderBy?: AgentExecutionOrderByWithAggregationInput | AgentExecutionOrderByWithAggregationInput[]
+    by: AgentExecutionScalarFieldEnum[] | AgentExecutionScalarFieldEnum
+    having?: AgentExecutionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: PostCountAggregateInputType | true
-    _avg?: PostAvgAggregateInputType
-    _sum?: PostSumAggregateInputType
-    _min?: PostMinAggregateInputType
-    _max?: PostMaxAggregateInputType
+    _count?: AgentExecutionCountAggregateInputType | true
+    _avg?: AgentExecutionAvgAggregateInputType
+    _sum?: AgentExecutionSumAggregateInputType
+    _min?: AgentExecutionMinAggregateInputType
+    _max?: AgentExecutionMaxAggregateInputType
   }
 
-  export type PostGroupByOutputType = {
-    id: number
-    name: string
+  export type AgentExecutionGroupByOutputType = {
+    id: string
+    feedId: number | null
+    runStartId: number | null
+    invocationId: string | null
+    status: string
+    errorMessage: string | null
+    model: string
+    llmCallCount: number
+    inputTokens: number
+    outputTokens: number
+    totalTokens: number
+    cacheCreationInputTokens: number | null
+    cacheReadInputTokens: number | null
+    toolCallsCount: number
+    modifiedFiles: string[]
+    startTime: Date
+    endTime: Date | null
+    durationMs: number | null
+    taskIndex: number | null
+    temperature: number | null
+    maxTokens: number | null
+    reportedCostUsd: Decimal | null
     createdAt: Date
-    updatedAt: Date
-    _count: PostCountAggregateOutputType | null
-    _avg: PostAvgAggregateOutputType | null
-    _sum: PostSumAggregateOutputType | null
-    _min: PostMinAggregateOutputType | null
-    _max: PostMaxAggregateOutputType | null
+    _count: AgentExecutionCountAggregateOutputType | null
+    _avg: AgentExecutionAvgAggregateOutputType | null
+    _sum: AgentExecutionSumAggregateOutputType | null
+    _min: AgentExecutionMinAggregateOutputType | null
+    _max: AgentExecutionMaxAggregateOutputType | null
   }
 
-  type GetPostGroupByPayload<T extends PostGroupByArgs> = Prisma.PrismaPromise<
+  type GetAgentExecutionGroupByPayload<T extends AgentExecutionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<PostGroupByOutputType, T['by']> &
+      PickEnumerable<AgentExecutionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof PostGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof AgentExecutionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], PostGroupByOutputType[P]>
-            : GetScalarType<T[P], PostGroupByOutputType[P]>
+              : GetScalarType<T[P], AgentExecutionGroupByOutputType[P]>
+            : GetScalarType<T[P], AgentExecutionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type PostSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AgentExecutionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    feedId?: boolean
+    runStartId?: boolean
+    invocationId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    model?: boolean
+    llmCallCount?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
+    totalTokens?: boolean
+    cacheCreationInputTokens?: boolean
+    cacheReadInputTokens?: boolean
+    toolCallsCount?: boolean
+    modifiedFiles?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    durationMs?: boolean
+    taskIndex?: boolean
+    temperature?: boolean
+    maxTokens?: boolean
+    reportedCostUsd?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["post"]>
+  }, ExtArgs["result"]["agentExecution"]>
 
-  export type PostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AgentExecutionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    feedId?: boolean
+    runStartId?: boolean
+    invocationId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    model?: boolean
+    llmCallCount?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
+    totalTokens?: boolean
+    cacheCreationInputTokens?: boolean
+    cacheReadInputTokens?: boolean
+    toolCallsCount?: boolean
+    modifiedFiles?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    durationMs?: boolean
+    taskIndex?: boolean
+    temperature?: boolean
+    maxTokens?: boolean
+    reportedCostUsd?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["post"]>
+  }, ExtArgs["result"]["agentExecution"]>
 
-  export type PostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type AgentExecutionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    feedId?: boolean
+    runStartId?: boolean
+    invocationId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    model?: boolean
+    llmCallCount?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
+    totalTokens?: boolean
+    cacheCreationInputTokens?: boolean
+    cacheReadInputTokens?: boolean
+    toolCallsCount?: boolean
+    modifiedFiles?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    durationMs?: boolean
+    taskIndex?: boolean
+    temperature?: boolean
+    maxTokens?: boolean
+    reportedCostUsd?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["post"]>
+  }, ExtArgs["result"]["agentExecution"]>
 
-  export type PostSelectScalar = {
+  export type AgentExecutionSelectScalar = {
     id?: boolean
-    name?: boolean
+    feedId?: boolean
+    runStartId?: boolean
+    invocationId?: boolean
+    status?: boolean
+    errorMessage?: boolean
+    model?: boolean
+    llmCallCount?: boolean
+    inputTokens?: boolean
+    outputTokens?: boolean
+    totalTokens?: boolean
+    cacheCreationInputTokens?: boolean
+    cacheReadInputTokens?: boolean
+    toolCallsCount?: boolean
+    modifiedFiles?: boolean
+    startTime?: boolean
+    endTime?: boolean
+    durationMs?: boolean
+    taskIndex?: boolean
+    temperature?: boolean
+    maxTokens?: boolean
+    reportedCostUsd?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+  export type AgentExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "feedId" | "runStartId" | "invocationId" | "status" | "errorMessage" | "model" | "llmCallCount" | "inputTokens" | "outputTokens" | "totalTokens" | "cacheCreationInputTokens" | "cacheReadInputTokens" | "toolCallsCount" | "modifiedFiles" | "startTime" | "endTime" | "durationMs" | "taskIndex" | "temperature" | "maxTokens" | "reportedCostUsd" | "createdAt", ExtArgs["result"]["agentExecution"]>
 
-  export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Post"
+  export type $AgentExecutionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AgentExecution"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      id: number
-      name: string
+      id: string
+      feedId: number | null
+      runStartId: number | null
+      invocationId: string | null
+      status: string
+      errorMessage: string | null
+      model: string
+      llmCallCount: number
+      inputTokens: number
+      outputTokens: number
+      totalTokens: number
+      cacheCreationInputTokens: number | null
+      cacheReadInputTokens: number | null
+      toolCallsCount: number
+      modifiedFiles: string[]
+      startTime: Date
+      endTime: Date | null
+      durationMs: number | null
+      taskIndex: number | null
+      temperature: number | null
+      maxTokens: number | null
+      reportedCostUsd: Prisma.Decimal | null
       createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["post"]>
+    }, ExtArgs["result"]["agentExecution"]>
     composites: {}
   }
 
-  type PostGetPayload<S extends boolean | null | undefined | PostDefaultArgs> = $Result.GetResult<Prisma.$PostPayload, S>
+  type AgentExecutionGetPayload<S extends boolean | null | undefined | AgentExecutionDefaultArgs> = $Result.GetResult<Prisma.$AgentExecutionPayload, S>
 
-  type PostCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PostFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PostCountAggregateInputType | true
+  type AgentExecutionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AgentExecutionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AgentExecutionCountAggregateInputType | true
     }
 
-  export interface PostDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Post'], meta: { name: 'Post' } }
+  export interface AgentExecutionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AgentExecution'], meta: { name: 'AgentExecution' } }
     /**
-     * Find zero or one Post that matches the filter.
-     * @param {PostFindUniqueArgs} args - Arguments to find a Post
+     * Find zero or one AgentExecution that matches the filter.
+     * @param {AgentExecutionFindUniqueArgs} args - Arguments to find a AgentExecution
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findUnique({
+     * // Get one AgentExecution
+     * const agentExecution = await prisma.agentExecution.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends PostFindUniqueArgs>(args: SelectSubset<T, PostFindUniqueArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends AgentExecutionFindUniqueArgs>(args: SelectSubset<T, AgentExecutionFindUniqueArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Post that matches the filter or throw an error with `error.code='P2025'`
+     * Find one AgentExecution that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {PostFindUniqueOrThrowArgs} args - Arguments to find a Post
+     * @param {AgentExecutionFindUniqueOrThrowArgs} args - Arguments to find a AgentExecution
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findUniqueOrThrow({
+     * // Get one AgentExecution
+     * const agentExecution = await prisma.agentExecution.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends PostFindUniqueOrThrowArgs>(args: SelectSubset<T, PostFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends AgentExecutionFindUniqueOrThrowArgs>(args: SelectSubset<T, AgentExecutionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Post that matches the filter.
+     * Find the first AgentExecution that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostFindFirstArgs} args - Arguments to find a Post
+     * @param {AgentExecutionFindFirstArgs} args - Arguments to find a AgentExecution
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findFirst({
+     * // Get one AgentExecution
+     * const agentExecution = await prisma.agentExecution.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends PostFindFirstArgs>(args?: SelectSubset<T, PostFindFirstArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends AgentExecutionFindFirstArgs>(args?: SelectSubset<T, AgentExecutionFindFirstArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Post that matches the filter or
+     * Find the first AgentExecution that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostFindFirstOrThrowArgs} args - Arguments to find a Post
+     * @param {AgentExecutionFindFirstOrThrowArgs} args - Arguments to find a AgentExecution
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findFirstOrThrow({
+     * // Get one AgentExecution
+     * const agentExecution = await prisma.agentExecution.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends PostFindFirstOrThrowArgs>(args?: SelectSubset<T, PostFindFirstOrThrowArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends AgentExecutionFindFirstOrThrowArgs>(args?: SelectSubset<T, AgentExecutionFindFirstOrThrowArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Posts that matches the filter.
+     * Find zero or more AgentExecutions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {AgentExecutionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Posts
-     * const posts = await prisma.post.findMany()
+     * // Get all AgentExecutions
+     * const agentExecutions = await prisma.agentExecution.findMany()
      * 
-     * // Get first 10 Posts
-     * const posts = await prisma.post.findMany({ take: 10 })
+     * // Get first 10 AgentExecutions
+     * const agentExecutions = await prisma.agentExecution.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const postWithIdOnly = await prisma.post.findMany({ select: { id: true } })
+     * const agentExecutionWithIdOnly = await prisma.agentExecution.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends PostFindManyArgs>(args?: SelectSubset<T, PostFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends AgentExecutionFindManyArgs>(args?: SelectSubset<T, AgentExecutionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Post.
-     * @param {PostCreateArgs} args - Arguments to create a Post.
+     * Create a AgentExecution.
+     * @param {AgentExecutionCreateArgs} args - Arguments to create a AgentExecution.
      * @example
-     * // Create one Post
-     * const Post = await prisma.post.create({
+     * // Create one AgentExecution
+     * const AgentExecution = await prisma.agentExecution.create({
      *   data: {
-     *     // ... data to create a Post
+     *     // ... data to create a AgentExecution
      *   }
      * })
      * 
      */
-    create<T extends PostCreateArgs>(args: SelectSubset<T, PostCreateArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends AgentExecutionCreateArgs>(args: SelectSubset<T, AgentExecutionCreateArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Posts.
-     * @param {PostCreateManyArgs} args - Arguments to create many Posts.
+     * Create many AgentExecutions.
+     * @param {AgentExecutionCreateManyArgs} args - Arguments to create many AgentExecutions.
      * @example
-     * // Create many Posts
-     * const post = await prisma.post.createMany({
+     * // Create many AgentExecutions
+     * const agentExecution = await prisma.agentExecution.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends PostCreateManyArgs>(args?: SelectSubset<T, PostCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends AgentExecutionCreateManyArgs>(args?: SelectSubset<T, AgentExecutionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Posts and returns the data saved in the database.
-     * @param {PostCreateManyAndReturnArgs} args - Arguments to create many Posts.
+     * Create many AgentExecutions and returns the data saved in the database.
+     * @param {AgentExecutionCreateManyAndReturnArgs} args - Arguments to create many AgentExecutions.
      * @example
-     * // Create many Posts
-     * const post = await prisma.post.createManyAndReturn({
+     * // Create many AgentExecutions
+     * const agentExecution = await prisma.agentExecution.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Posts and only return the `id`
-     * const postWithIdOnly = await prisma.post.createManyAndReturn({
+     * // Create many AgentExecutions and only return the `id`
+     * const agentExecutionWithIdOnly = await prisma.agentExecution.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -1223,28 +1499,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends PostCreateManyAndReturnArgs>(args?: SelectSubset<T, PostCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends AgentExecutionCreateManyAndReturnArgs>(args?: SelectSubset<T, AgentExecutionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Post.
-     * @param {PostDeleteArgs} args - Arguments to delete one Post.
+     * Delete a AgentExecution.
+     * @param {AgentExecutionDeleteArgs} args - Arguments to delete one AgentExecution.
      * @example
-     * // Delete one Post
-     * const Post = await prisma.post.delete({
+     * // Delete one AgentExecution
+     * const AgentExecution = await prisma.agentExecution.delete({
      *   where: {
-     *     // ... filter to delete one Post
+     *     // ... filter to delete one AgentExecution
      *   }
      * })
      * 
      */
-    delete<T extends PostDeleteArgs>(args: SelectSubset<T, PostDeleteArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends AgentExecutionDeleteArgs>(args: SelectSubset<T, AgentExecutionDeleteArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Post.
-     * @param {PostUpdateArgs} args - Arguments to update one Post.
+     * Update one AgentExecution.
+     * @param {AgentExecutionUpdateArgs} args - Arguments to update one AgentExecution.
      * @example
-     * // Update one Post
-     * const post = await prisma.post.update({
+     * // Update one AgentExecution
+     * const agentExecution = await prisma.agentExecution.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1254,30 +1530,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends PostUpdateArgs>(args: SelectSubset<T, PostUpdateArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends AgentExecutionUpdateArgs>(args: SelectSubset<T, AgentExecutionUpdateArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Posts.
-     * @param {PostDeleteManyArgs} args - Arguments to filter Posts to delete.
+     * Delete zero or more AgentExecutions.
+     * @param {AgentExecutionDeleteManyArgs} args - Arguments to filter AgentExecutions to delete.
      * @example
-     * // Delete a few Posts
-     * const { count } = await prisma.post.deleteMany({
+     * // Delete a few AgentExecutions
+     * const { count } = await prisma.agentExecution.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends PostDeleteManyArgs>(args?: SelectSubset<T, PostDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends AgentExecutionDeleteManyArgs>(args?: SelectSubset<T, AgentExecutionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Posts.
+     * Update zero or more AgentExecutions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {AgentExecutionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Posts
-     * const post = await prisma.post.updateMany({
+     * // Update many AgentExecutions
+     * const agentExecution = await prisma.agentExecution.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1287,14 +1563,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends PostUpdateManyArgs>(args: SelectSubset<T, PostUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends AgentExecutionUpdateManyArgs>(args: SelectSubset<T, AgentExecutionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Posts and returns the data updated in the database.
-     * @param {PostUpdateManyAndReturnArgs} args - Arguments to update many Posts.
+     * Update zero or more AgentExecutions and returns the data updated in the database.
+     * @param {AgentExecutionUpdateManyAndReturnArgs} args - Arguments to update many AgentExecutions.
      * @example
-     * // Update many Posts
-     * const post = await prisma.post.updateManyAndReturn({
+     * // Update many AgentExecutions
+     * const agentExecution = await prisma.agentExecution.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1303,8 +1579,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Posts and only return the `id`
-     * const postWithIdOnly = await prisma.post.updateManyAndReturn({
+     * // Update zero or more AgentExecutions and only return the `id`
+     * const agentExecutionWithIdOnly = await prisma.agentExecution.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -1317,56 +1593,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends PostUpdateManyAndReturnArgs>(args: SelectSubset<T, PostUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends AgentExecutionUpdateManyAndReturnArgs>(args: SelectSubset<T, AgentExecutionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Post.
-     * @param {PostUpsertArgs} args - Arguments to update or create a Post.
+     * Create or update one AgentExecution.
+     * @param {AgentExecutionUpsertArgs} args - Arguments to update or create a AgentExecution.
      * @example
-     * // Update or create a Post
-     * const post = await prisma.post.upsert({
+     * // Update or create a AgentExecution
+     * const agentExecution = await prisma.agentExecution.upsert({
      *   create: {
-     *     // ... data to create a Post
+     *     // ... data to create a AgentExecution
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Post we want to update
+     *     // ... the filter for the AgentExecution we want to update
      *   }
      * })
      */
-    upsert<T extends PostUpsertArgs>(args: SelectSubset<T, PostUpsertArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends AgentExecutionUpsertArgs>(args: SelectSubset<T, AgentExecutionUpsertArgs<ExtArgs>>): Prisma__AgentExecutionClient<$Result.GetResult<Prisma.$AgentExecutionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Posts.
+     * Count the number of AgentExecutions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostCountArgs} args - Arguments to filter Posts to count.
+     * @param {AgentExecutionCountArgs} args - Arguments to filter AgentExecutions to count.
      * @example
-     * // Count the number of Posts
-     * const count = await prisma.post.count({
+     * // Count the number of AgentExecutions
+     * const count = await prisma.agentExecution.count({
      *   where: {
-     *     // ... the filter for the Posts we want to count
+     *     // ... the filter for the AgentExecutions we want to count
      *   }
      * })
     **/
-    count<T extends PostCountArgs>(
-      args?: Subset<T, PostCountArgs>,
+    count<T extends AgentExecutionCountArgs>(
+      args?: Subset<T, AgentExecutionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], PostCountAggregateOutputType>
+          : GetScalarType<T['select'], AgentExecutionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Post.
+     * Allows you to perform aggregations operations on a AgentExecution.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {AgentExecutionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -1386,13 +1662,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends PostAggregateArgs>(args: Subset<T, PostAggregateArgs>): Prisma.PrismaPromise<GetPostAggregateType<T>>
+    aggregate<T extends AgentExecutionAggregateArgs>(args: Subset<T, AgentExecutionAggregateArgs>): Prisma.PrismaPromise<GetAgentExecutionAggregateType<T>>
 
     /**
-     * Group by Post.
+     * Group by AgentExecution.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostGroupByArgs} args - Group by arguments.
+     * @param {AgentExecutionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -1407,14 +1683,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends PostGroupByArgs,
+      T extends AgentExecutionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PostGroupByArgs['orderBy'] }
-        : { orderBy?: PostGroupByArgs['orderBy'] },
+        ? { orderBy: AgentExecutionGroupByArgs['orderBy'] }
+        : { orderBy?: AgentExecutionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -1463,20 +1739,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PostGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPostGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, AgentExecutionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAgentExecutionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Post model
+   * Fields of the AgentExecution model
    */
-  readonly fields: PostFieldRefs;
+  readonly fields: AgentExecutionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Post.
+   * The delegate class that acts as a "Promise-like" for AgentExecution.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__PostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__AgentExecutionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1504,376 +1780,395 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Post model
+   * Fields of the AgentExecution model
    */
-  interface PostFieldRefs {
-    readonly id: FieldRef<"Post", 'Int'>
-    readonly name: FieldRef<"Post", 'String'>
-    readonly createdAt: FieldRef<"Post", 'DateTime'>
-    readonly updatedAt: FieldRef<"Post", 'DateTime'>
+  interface AgentExecutionFieldRefs {
+    readonly id: FieldRef<"AgentExecution", 'String'>
+    readonly feedId: FieldRef<"AgentExecution", 'Int'>
+    readonly runStartId: FieldRef<"AgentExecution", 'Int'>
+    readonly invocationId: FieldRef<"AgentExecution", 'String'>
+    readonly status: FieldRef<"AgentExecution", 'String'>
+    readonly errorMessage: FieldRef<"AgentExecution", 'String'>
+    readonly model: FieldRef<"AgentExecution", 'String'>
+    readonly llmCallCount: FieldRef<"AgentExecution", 'Int'>
+    readonly inputTokens: FieldRef<"AgentExecution", 'Int'>
+    readonly outputTokens: FieldRef<"AgentExecution", 'Int'>
+    readonly totalTokens: FieldRef<"AgentExecution", 'Int'>
+    readonly cacheCreationInputTokens: FieldRef<"AgentExecution", 'Int'>
+    readonly cacheReadInputTokens: FieldRef<"AgentExecution", 'Int'>
+    readonly toolCallsCount: FieldRef<"AgentExecution", 'Int'>
+    readonly modifiedFiles: FieldRef<"AgentExecution", 'String[]'>
+    readonly startTime: FieldRef<"AgentExecution", 'DateTime'>
+    readonly endTime: FieldRef<"AgentExecution", 'DateTime'>
+    readonly durationMs: FieldRef<"AgentExecution", 'Int'>
+    readonly taskIndex: FieldRef<"AgentExecution", 'Int'>
+    readonly temperature: FieldRef<"AgentExecution", 'Float'>
+    readonly maxTokens: FieldRef<"AgentExecution", 'Int'>
+    readonly reportedCostUsd: FieldRef<"AgentExecution", 'Decimal'>
+    readonly createdAt: FieldRef<"AgentExecution", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * Post findUnique
+   * AgentExecution findUnique
    */
-  export type PostFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which AgentExecution to fetch.
      */
-    where: PostWhereUniqueInput
+    where: AgentExecutionWhereUniqueInput
   }
 
   /**
-   * Post findUniqueOrThrow
+   * AgentExecution findUniqueOrThrow
    */
-  export type PostFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which AgentExecution to fetch.
      */
-    where: PostWhereUniqueInput
+    where: AgentExecutionWhereUniqueInput
   }
 
   /**
-   * Post findFirst
+   * AgentExecution findFirst
    */
-  export type PostFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which AgentExecution to fetch.
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of AgentExecutions to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: AgentExecutionOrderByWithRelationInput | AgentExecutionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Posts.
+     * Sets the position for searching for AgentExecutions.
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: AgentExecutionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` AgentExecutions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` AgentExecutions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Posts.
+     * Filter by unique combinations of AgentExecutions.
      */
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: AgentExecutionScalarFieldEnum | AgentExecutionScalarFieldEnum[]
   }
 
   /**
-   * Post findFirstOrThrow
+   * AgentExecution findFirstOrThrow
    */
-  export type PostFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which AgentExecution to fetch.
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of AgentExecutions to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: AgentExecutionOrderByWithRelationInput | AgentExecutionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Posts.
+     * Sets the position for searching for AgentExecutions.
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: AgentExecutionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` AgentExecutions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` AgentExecutions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Posts.
+     * Filter by unique combinations of AgentExecutions.
      */
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: AgentExecutionScalarFieldEnum | AgentExecutionScalarFieldEnum[]
   }
 
   /**
-   * Post findMany
+   * AgentExecution findMany
    */
-  export type PostFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * Filter, which Posts to fetch.
+     * Filter, which AgentExecutions to fetch.
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of AgentExecutions to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: AgentExecutionOrderByWithRelationInput | AgentExecutionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Posts.
+     * Sets the position for listing AgentExecutions.
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: AgentExecutionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` AgentExecutions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` AgentExecutions.
      */
     skip?: number
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: AgentExecutionScalarFieldEnum | AgentExecutionScalarFieldEnum[]
   }
 
   /**
-   * Post create
+   * AgentExecution create
    */
-  export type PostCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * The data needed to create a Post.
+     * The data needed to create a AgentExecution.
      */
-    data: XOR<PostCreateInput, PostUncheckedCreateInput>
+    data: XOR<AgentExecutionCreateInput, AgentExecutionUncheckedCreateInput>
   }
 
   /**
-   * Post createMany
+   * AgentExecution createMany
    */
-  export type PostCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Posts.
+     * The data used to create many AgentExecutions.
      */
-    data: PostCreateManyInput | PostCreateManyInput[]
+    data: AgentExecutionCreateManyInput | AgentExecutionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Post createManyAndReturn
+   * AgentExecution createManyAndReturn
    */
-  export type PostCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelectCreateManyAndReturn<ExtArgs> | null
+    select?: AgentExecutionSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * The data used to create many Posts.
+     * The data used to create many AgentExecutions.
      */
-    data: PostCreateManyInput | PostCreateManyInput[]
+    data: AgentExecutionCreateManyInput | AgentExecutionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Post update
+   * AgentExecution update
    */
-  export type PostUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * The data needed to update a Post.
+     * The data needed to update a AgentExecution.
      */
-    data: XOR<PostUpdateInput, PostUncheckedUpdateInput>
+    data: XOR<AgentExecutionUpdateInput, AgentExecutionUncheckedUpdateInput>
     /**
-     * Choose, which Post to update.
+     * Choose, which AgentExecution to update.
      */
-    where: PostWhereUniqueInput
+    where: AgentExecutionWhereUniqueInput
   }
 
   /**
-   * Post updateMany
+   * AgentExecution updateMany
    */
-  export type PostUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Posts.
+     * The data used to update AgentExecutions.
      */
-    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyInput>
+    data: XOR<AgentExecutionUpdateManyMutationInput, AgentExecutionUncheckedUpdateManyInput>
     /**
-     * Filter which Posts to update
+     * Filter which AgentExecutions to update
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
-     * Limit how many Posts to update.
+     * Limit how many AgentExecutions to update.
      */
     limit?: number
   }
 
   /**
-   * Post updateManyAndReturn
+   * AgentExecution updateManyAndReturn
    */
-  export type PostUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: AgentExecutionSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * The data used to update Posts.
+     * The data used to update AgentExecutions.
      */
-    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyInput>
+    data: XOR<AgentExecutionUpdateManyMutationInput, AgentExecutionUncheckedUpdateManyInput>
     /**
-     * Filter which Posts to update
+     * Filter which AgentExecutions to update
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
-     * Limit how many Posts to update.
+     * Limit how many AgentExecutions to update.
      */
     limit?: number
   }
 
   /**
-   * Post upsert
+   * AgentExecution upsert
    */
-  export type PostUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * The filter to search for the Post to update in case it exists.
+     * The filter to search for the AgentExecution to update in case it exists.
      */
-    where: PostWhereUniqueInput
+    where: AgentExecutionWhereUniqueInput
     /**
-     * In case the Post found by the `where` argument doesn't exist, create a new Post with this data.
+     * In case the AgentExecution found by the `where` argument doesn't exist, create a new AgentExecution with this data.
      */
-    create: XOR<PostCreateInput, PostUncheckedCreateInput>
+    create: XOR<AgentExecutionCreateInput, AgentExecutionUncheckedCreateInput>
     /**
-     * In case the Post was found with the provided `where` argument, update it with this data.
+     * In case the AgentExecution was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<PostUpdateInput, PostUncheckedUpdateInput>
+    update: XOR<AgentExecutionUpdateInput, AgentExecutionUncheckedUpdateInput>
   }
 
   /**
-   * Post delete
+   * AgentExecution delete
    */
-  export type PostDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
     /**
-     * Filter which Post to delete.
+     * Filter which AgentExecution to delete.
      */
-    where: PostWhereUniqueInput
+    where: AgentExecutionWhereUniqueInput
   }
 
   /**
-   * Post deleteMany
+   * AgentExecution deleteMany
    */
-  export type PostDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Posts to delete
+     * Filter which AgentExecutions to delete
      */
-    where?: PostWhereInput
+    where?: AgentExecutionWhereInput
     /**
-     * Limit how many Posts to delete.
+     * Limit how many AgentExecutions to delete.
      */
     limit?: number
   }
 
   /**
-   * Post without action
+   * AgentExecution without action
    */
-  export type PostDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AgentExecutionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the AgentExecution
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: AgentExecutionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the AgentExecution
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: AgentExecutionOmit<ExtArgs> | null
   }
 
 
@@ -1891,14 +2186,33 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const PostScalarFieldEnum: {
+  export const AgentExecutionScalarFieldEnum: {
     id: 'id',
-    name: 'name',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    feedId: 'feedId',
+    runStartId: 'runStartId',
+    invocationId: 'invocationId',
+    status: 'status',
+    errorMessage: 'errorMessage',
+    model: 'model',
+    llmCallCount: 'llmCallCount',
+    inputTokens: 'inputTokens',
+    outputTokens: 'outputTokens',
+    totalTokens: 'totalTokens',
+    cacheCreationInputTokens: 'cacheCreationInputTokens',
+    cacheReadInputTokens: 'cacheReadInputTokens',
+    toolCallsCount: 'toolCallsCount',
+    modifiedFiles: 'modifiedFiles',
+    startTime: 'startTime',
+    endTime: 'endTime',
+    durationMs: 'durationMs',
+    taskIndex: 'taskIndex',
+    temperature: 'temperature',
+    maxTokens: 'maxTokens',
+    reportedCostUsd: 'reportedCostUsd',
+    createdAt: 'createdAt'
   };
 
-  export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+  export type AgentExecutionScalarFieldEnum = (typeof AgentExecutionScalarFieldEnum)[keyof typeof AgentExecutionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -1917,23 +2231,17 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   /**
    * Field references
    */
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
 
 
   /**
@@ -1947,6 +2255,20 @@ export namespace Prisma {
    * Reference to a field of type 'String[]'
    */
   export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1976,115 +2298,349 @@ export namespace Prisma {
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
   /**
    * Deep Input Types
    */
 
 
-  export type PostWhereInput = {
-    AND?: PostWhereInput | PostWhereInput[]
-    OR?: PostWhereInput[]
-    NOT?: PostWhereInput | PostWhereInput[]
-    id?: IntFilter<"Post"> | number
-    name?: StringFilter<"Post"> | string
-    createdAt?: DateTimeFilter<"Post"> | Date | string
-    updatedAt?: DateTimeFilter<"Post"> | Date | string
+  export type AgentExecutionWhereInput = {
+    AND?: AgentExecutionWhereInput | AgentExecutionWhereInput[]
+    OR?: AgentExecutionWhereInput[]
+    NOT?: AgentExecutionWhereInput | AgentExecutionWhereInput[]
+    id?: StringFilter<"AgentExecution"> | string
+    feedId?: IntNullableFilter<"AgentExecution"> | number | null
+    runStartId?: IntNullableFilter<"AgentExecution"> | number | null
+    invocationId?: StringNullableFilter<"AgentExecution"> | string | null
+    status?: StringFilter<"AgentExecution"> | string
+    errorMessage?: StringNullableFilter<"AgentExecution"> | string | null
+    model?: StringFilter<"AgentExecution"> | string
+    llmCallCount?: IntFilter<"AgentExecution"> | number
+    inputTokens?: IntFilter<"AgentExecution"> | number
+    outputTokens?: IntFilter<"AgentExecution"> | number
+    totalTokens?: IntFilter<"AgentExecution"> | number
+    cacheCreationInputTokens?: IntNullableFilter<"AgentExecution"> | number | null
+    cacheReadInputTokens?: IntNullableFilter<"AgentExecution"> | number | null
+    toolCallsCount?: IntFilter<"AgentExecution"> | number
+    modifiedFiles?: StringNullableListFilter<"AgentExecution">
+    startTime?: DateTimeFilter<"AgentExecution"> | Date | string
+    endTime?: DateTimeNullableFilter<"AgentExecution"> | Date | string | null
+    durationMs?: IntNullableFilter<"AgentExecution"> | number | null
+    taskIndex?: IntNullableFilter<"AgentExecution"> | number | null
+    temperature?: FloatNullableFilter<"AgentExecution"> | number | null
+    maxTokens?: IntNullableFilter<"AgentExecution"> | number | null
+    reportedCostUsd?: DecimalNullableFilter<"AgentExecution"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"AgentExecution"> | Date | string
   }
 
-  export type PostOrderByWithRelationInput = {
+  export type AgentExecutionOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
+    feedId?: SortOrderInput | SortOrder
+    runStartId?: SortOrderInput | SortOrder
+    invocationId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    model?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrderInput | SortOrder
+    cacheReadInputTokens?: SortOrderInput | SortOrder
+    toolCallsCount?: SortOrder
+    modifiedFiles?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrderInput | SortOrder
+    durationMs?: SortOrderInput | SortOrder
+    taskIndex?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    maxTokens?: SortOrderInput | SortOrder
+    reportedCostUsd?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type PostWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: PostWhereInput | PostWhereInput[]
-    OR?: PostWhereInput[]
-    NOT?: PostWhereInput | PostWhereInput[]
-    name?: StringFilter<"Post"> | string
-    createdAt?: DateTimeFilter<"Post"> | Date | string
-    updatedAt?: DateTimeFilter<"Post"> | Date | string
-  }, "id">
+  export type AgentExecutionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    invocationId?: string
+    AND?: AgentExecutionWhereInput | AgentExecutionWhereInput[]
+    OR?: AgentExecutionWhereInput[]
+    NOT?: AgentExecutionWhereInput | AgentExecutionWhereInput[]
+    feedId?: IntNullableFilter<"AgentExecution"> | number | null
+    runStartId?: IntNullableFilter<"AgentExecution"> | number | null
+    status?: StringFilter<"AgentExecution"> | string
+    errorMessage?: StringNullableFilter<"AgentExecution"> | string | null
+    model?: StringFilter<"AgentExecution"> | string
+    llmCallCount?: IntFilter<"AgentExecution"> | number
+    inputTokens?: IntFilter<"AgentExecution"> | number
+    outputTokens?: IntFilter<"AgentExecution"> | number
+    totalTokens?: IntFilter<"AgentExecution"> | number
+    cacheCreationInputTokens?: IntNullableFilter<"AgentExecution"> | number | null
+    cacheReadInputTokens?: IntNullableFilter<"AgentExecution"> | number | null
+    toolCallsCount?: IntFilter<"AgentExecution"> | number
+    modifiedFiles?: StringNullableListFilter<"AgentExecution">
+    startTime?: DateTimeFilter<"AgentExecution"> | Date | string
+    endTime?: DateTimeNullableFilter<"AgentExecution"> | Date | string | null
+    durationMs?: IntNullableFilter<"AgentExecution"> | number | null
+    taskIndex?: IntNullableFilter<"AgentExecution"> | number | null
+    temperature?: FloatNullableFilter<"AgentExecution"> | number | null
+    maxTokens?: IntNullableFilter<"AgentExecution"> | number | null
+    reportedCostUsd?: DecimalNullableFilter<"AgentExecution"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"AgentExecution"> | Date | string
+  }, "id" | "invocationId">
 
-  export type PostOrderByWithAggregationInput = {
+  export type AgentExecutionOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
+    feedId?: SortOrderInput | SortOrder
+    runStartId?: SortOrderInput | SortOrder
+    invocationId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    model?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrderInput | SortOrder
+    cacheReadInputTokens?: SortOrderInput | SortOrder
+    toolCallsCount?: SortOrder
+    modifiedFiles?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrderInput | SortOrder
+    durationMs?: SortOrderInput | SortOrder
+    taskIndex?: SortOrderInput | SortOrder
+    temperature?: SortOrderInput | SortOrder
+    maxTokens?: SortOrderInput | SortOrder
+    reportedCostUsd?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: PostCountOrderByAggregateInput
-    _avg?: PostAvgOrderByAggregateInput
-    _max?: PostMaxOrderByAggregateInput
-    _min?: PostMinOrderByAggregateInput
-    _sum?: PostSumOrderByAggregateInput
+    _count?: AgentExecutionCountOrderByAggregateInput
+    _avg?: AgentExecutionAvgOrderByAggregateInput
+    _max?: AgentExecutionMaxOrderByAggregateInput
+    _min?: AgentExecutionMinOrderByAggregateInput
+    _sum?: AgentExecutionSumOrderByAggregateInput
   }
 
-  export type PostScalarWhereWithAggregatesInput = {
-    AND?: PostScalarWhereWithAggregatesInput | PostScalarWhereWithAggregatesInput[]
-    OR?: PostScalarWhereWithAggregatesInput[]
-    NOT?: PostScalarWhereWithAggregatesInput | PostScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Post"> | number
-    name?: StringWithAggregatesFilter<"Post"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
+  export type AgentExecutionScalarWhereWithAggregatesInput = {
+    AND?: AgentExecutionScalarWhereWithAggregatesInput | AgentExecutionScalarWhereWithAggregatesInput[]
+    OR?: AgentExecutionScalarWhereWithAggregatesInput[]
+    NOT?: AgentExecutionScalarWhereWithAggregatesInput | AgentExecutionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AgentExecution"> | string
+    feedId?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    runStartId?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    invocationId?: StringNullableWithAggregatesFilter<"AgentExecution"> | string | null
+    status?: StringWithAggregatesFilter<"AgentExecution"> | string
+    errorMessage?: StringNullableWithAggregatesFilter<"AgentExecution"> | string | null
+    model?: StringWithAggregatesFilter<"AgentExecution"> | string
+    llmCallCount?: IntWithAggregatesFilter<"AgentExecution"> | number
+    inputTokens?: IntWithAggregatesFilter<"AgentExecution"> | number
+    outputTokens?: IntWithAggregatesFilter<"AgentExecution"> | number
+    totalTokens?: IntWithAggregatesFilter<"AgentExecution"> | number
+    cacheCreationInputTokens?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    cacheReadInputTokens?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    toolCallsCount?: IntWithAggregatesFilter<"AgentExecution"> | number
+    modifiedFiles?: StringNullableListFilter<"AgentExecution">
+    startTime?: DateTimeWithAggregatesFilter<"AgentExecution"> | Date | string
+    endTime?: DateTimeNullableWithAggregatesFilter<"AgentExecution"> | Date | string | null
+    durationMs?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    taskIndex?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    temperature?: FloatNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    maxTokens?: IntNullableWithAggregatesFilter<"AgentExecution"> | number | null
+    reportedCostUsd?: DecimalNullableWithAggregatesFilter<"AgentExecution"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AgentExecution"> | Date | string
   }
 
-  export type PostCreateInput = {
-    name: string
+  export type AgentExecutionCreateInput = {
+    id?: string
+    feedId?: number | null
+    runStartId?: number | null
+    invocationId?: string | null
+    status: string
+    errorMessage?: string | null
+    model: string
+    llmCallCount: number
+    inputTokens: number
+    outputTokens: number
+    totalTokens: number
+    cacheCreationInputTokens?: number | null
+    cacheReadInputTokens?: number | null
+    toolCallsCount: number
+    modifiedFiles?: AgentExecutionCreatemodifiedFilesInput | string[]
+    startTime: Date | string
+    endTime?: Date | string | null
+    durationMs?: number | null
+    taskIndex?: number | null
+    temperature?: number | null
+    maxTokens?: number | null
+    reportedCostUsd?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type PostUncheckedCreateInput = {
-    id?: number
-    name: string
+  export type AgentExecutionUncheckedCreateInput = {
+    id?: string
+    feedId?: number | null
+    runStartId?: number | null
+    invocationId?: string | null
+    status: string
+    errorMessage?: string | null
+    model: string
+    llmCallCount: number
+    inputTokens: number
+    outputTokens: number
+    totalTokens: number
+    cacheCreationInputTokens?: number | null
+    cacheReadInputTokens?: number | null
+    toolCallsCount: number
+    modifiedFiles?: AgentExecutionCreatemodifiedFilesInput | string[]
+    startTime: Date | string
+    endTime?: Date | string | null
+    durationMs?: number | null
+    taskIndex?: number | null
+    temperature?: number | null
+    maxTokens?: number | null
+    reportedCostUsd?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type PostUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
+  export type AgentExecutionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feedId?: NullableIntFieldUpdateOperationsInput | number | null
+    runStartId?: NullableIntFieldUpdateOperationsInput | number | null
+    invocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: StringFieldUpdateOperationsInput | string
+    llmCallCount?: IntFieldUpdateOperationsInput | number
+    inputTokens?: IntFieldUpdateOperationsInput | number
+    outputTokens?: IntFieldUpdateOperationsInput | number
+    totalTokens?: IntFieldUpdateOperationsInput | number
+    cacheCreationInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cacheReadInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    toolCallsCount?: IntFieldUpdateOperationsInput | number
+    modifiedFiles?: AgentExecutionUpdatemodifiedFilesInput | string[]
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    taskIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    reportedCostUsd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PostUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
+  export type AgentExecutionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feedId?: NullableIntFieldUpdateOperationsInput | number | null
+    runStartId?: NullableIntFieldUpdateOperationsInput | number | null
+    invocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: StringFieldUpdateOperationsInput | string
+    llmCallCount?: IntFieldUpdateOperationsInput | number
+    inputTokens?: IntFieldUpdateOperationsInput | number
+    outputTokens?: IntFieldUpdateOperationsInput | number
+    totalTokens?: IntFieldUpdateOperationsInput | number
+    cacheCreationInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cacheReadInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    toolCallsCount?: IntFieldUpdateOperationsInput | number
+    modifiedFiles?: AgentExecutionUpdatemodifiedFilesInput | string[]
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    taskIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    reportedCostUsd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PostCreateManyInput = {
-    id?: number
-    name: string
+  export type AgentExecutionCreateManyInput = {
+    id?: string
+    feedId?: number | null
+    runStartId?: number | null
+    invocationId?: string | null
+    status: string
+    errorMessage?: string | null
+    model: string
+    llmCallCount: number
+    inputTokens: number
+    outputTokens: number
+    totalTokens: number
+    cacheCreationInputTokens?: number | null
+    cacheReadInputTokens?: number | null
+    toolCallsCount: number
+    modifiedFiles?: AgentExecutionCreatemodifiedFilesInput | string[]
+    startTime: Date | string
+    endTime?: Date | string | null
+    durationMs?: number | null
+    taskIndex?: number | null
+    temperature?: number | null
+    maxTokens?: number | null
+    reportedCostUsd?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type PostUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
+  export type AgentExecutionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feedId?: NullableIntFieldUpdateOperationsInput | number | null
+    runStartId?: NullableIntFieldUpdateOperationsInput | number | null
+    invocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: StringFieldUpdateOperationsInput | string
+    llmCallCount?: IntFieldUpdateOperationsInput | number
+    inputTokens?: IntFieldUpdateOperationsInput | number
+    outputTokens?: IntFieldUpdateOperationsInput | number
+    totalTokens?: IntFieldUpdateOperationsInput | number
+    cacheCreationInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cacheReadInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    toolCallsCount?: IntFieldUpdateOperationsInput | number
+    modifiedFiles?: AgentExecutionUpdatemodifiedFilesInput | string[]
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    taskIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    reportedCostUsd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PostUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
+  export type AgentExecutionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feedId?: NullableIntFieldUpdateOperationsInput | number | null
+    runStartId?: NullableIntFieldUpdateOperationsInput | number | null
+    invocationId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: StringFieldUpdateOperationsInput | string
+    llmCallCount?: IntFieldUpdateOperationsInput | number
+    inputTokens?: IntFieldUpdateOperationsInput | number
+    outputTokens?: IntFieldUpdateOperationsInput | number
+    totalTokens?: IntFieldUpdateOperationsInput | number
+    cacheCreationInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    cacheReadInputTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    toolCallsCount?: IntFieldUpdateOperationsInput | number
+    modifiedFiles?: AgentExecutionUpdatemodifiedFilesInput | string[]
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    endTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    durationMs?: NullableIntFieldUpdateOperationsInput | number | null
+    taskIndex?: NullableIntFieldUpdateOperationsInput | number | null
+    temperature?: NullableFloatFieldUpdateOperationsInput | number | null
+    maxTokens?: NullableIntFieldUpdateOperationsInput | number | null
+    reportedCostUsd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -2102,6 +2658,51 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -2113,49 +2714,152 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type PostCountOrderByAggregateInput = {
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type AgentExecutionCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    feedId?: SortOrder
+    runStartId?: SortOrder
+    invocationId?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    model?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrder
+    cacheReadInputTokens?: SortOrder
+    toolCallsCount?: SortOrder
+    modifiedFiles?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    durationMs?: SortOrder
+    taskIndex?: SortOrder
+    temperature?: SortOrder
+    maxTokens?: SortOrder
+    reportedCostUsd?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type PostAvgOrderByAggregateInput = {
-    id?: SortOrder
+  export type AgentExecutionAvgOrderByAggregateInput = {
+    feedId?: SortOrder
+    runStartId?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrder
+    cacheReadInputTokens?: SortOrder
+    toolCallsCount?: SortOrder
+    durationMs?: SortOrder
+    taskIndex?: SortOrder
+    temperature?: SortOrder
+    maxTokens?: SortOrder
+    reportedCostUsd?: SortOrder
   }
 
-  export type PostMaxOrderByAggregateInput = {
+  export type AgentExecutionMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    feedId?: SortOrder
+    runStartId?: SortOrder
+    invocationId?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    model?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrder
+    cacheReadInputTokens?: SortOrder
+    toolCallsCount?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    durationMs?: SortOrder
+    taskIndex?: SortOrder
+    temperature?: SortOrder
+    maxTokens?: SortOrder
+    reportedCostUsd?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type PostMinOrderByAggregateInput = {
+  export type AgentExecutionMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    feedId?: SortOrder
+    runStartId?: SortOrder
+    invocationId?: SortOrder
+    status?: SortOrder
+    errorMessage?: SortOrder
+    model?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrder
+    cacheReadInputTokens?: SortOrder
+    toolCallsCount?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
+    durationMs?: SortOrder
+    taskIndex?: SortOrder
+    temperature?: SortOrder
+    maxTokens?: SortOrder
+    reportedCostUsd?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type PostSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type AgentExecutionSumOrderByAggregateInput = {
+    feedId?: SortOrder
+    runStartId?: SortOrder
+    llmCallCount?: SortOrder
+    inputTokens?: SortOrder
+    outputTokens?: SortOrder
+    totalTokens?: SortOrder
+    cacheCreationInputTokens?: SortOrder
+    cacheReadInputTokens?: SortOrder
+    toolCallsCount?: SortOrder
+    durationMs?: SortOrder
+    taskIndex?: SortOrder
+    temperature?: SortOrder
+    maxTokens?: SortOrder
+    reportedCostUsd?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -2176,6 +2880,56 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -2190,12 +2944,70 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type AgentExecutionCreatemodifiedFilesInput = {
+    set: string[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -2206,15 +3018,33 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type AgentExecutionUpdatemodifiedFilesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -2231,6 +3061,42 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -2240,6 +3106,89 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -2269,23 +3218,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -2298,6 +3230,52 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
 
