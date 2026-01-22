@@ -1,6 +1,6 @@
 # Fixer Agent Metrics Dashboard
 
-A full-stack application for visualizing Fixer Agent execution metrics. Built as an internal monitoring tool to track performance, cost, and reliability of AI agent runs.
+A full-stack metrics dashboard for visualizing Fixer Agent execution performance, cost, and reliability. Built as an internal monitoring tool to answer key operational questions across engineering and leadership teams.
 
 ---
 
@@ -22,501 +22,190 @@ pnpm dev
 pnpm test
 ```
 
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
+
 ---
 
 ## Architecture Overview
 
-This dashboard follows a **three-tier architecture** using the T3 Stack:
+This dashboard uses the **T3 Stack** (Next.js 15 + tRPC + Prisma + TypeScript) for end-to-end type safety and rapid development. The frontend consists of three specialized tabs (Overview, Efficiency, Errors) with 9 Recharts visualizations and dynamic filter bars. The backend exposes 8 tRPC procedures that perform server-side aggregation via Prisma ORM and raw SQL queries against a single PostgreSQL table (`AgentExecution`).
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  FRONTEND (Next.js 15 App Router)                           │
-│  ├── Dashboard Page (/)                                     │
-│  │   ├── FilterBar - Date range, status, model filters      │
-│  │   ├── KPICards - Summary statistics                      │
-│  │   └── Charts - Recharts visualizations                   │
-│  └── TanStack Query - Server state management               │
-├─────────────────────────────────────────────────────────────┤
-│  API LAYER (tRPC)                                           │
-│  ├── metrics.getSummary - Aggregated KPIs                   │
-│  ├── metrics.getTimeSeries - Time-bucketed data             │
-│  ├── metrics.getRunsList - Paginated run details            │
-│  └── metrics.getModels - Available models for filter        │
-├─────────────────────────────────────────────────────────────┤
-│  DATABASE (PostgreSQL + Prisma ORM)                         │
-│  └── AgentExecution table - Flat denormalized schema        │
-└─────────────────────────────────────────────────────────────┘
-```
+The flat schema design prioritizes development speed over query flexibility - all execution metrics are stored in one denormalized table matching the provided `AgentExecutionMetrics` interface 1:1. This works well for ~100K rows and single-user access, but production scale (>1M rows) would require pre-aggregated rollup tables and partitioning (see WRITEUP.md for scaling strategy).
 
-**Why T3 Stack?**
-- **Type safety end-to-end**: tRPC ensures API contracts are enforced at compile time
-- **Modern React**: Next.js 15 with App Router, React 19, Server Components
-- **Excellent DX**: Hot reload, TypeScript, Tailwind CSS
-- **Production-ready**: Prisma migrations, environment validation
+**Tech Stack:** Next.js 15 App Router, React 19, tRPC v11, Prisma v6, PostgreSQL, Recharts, TanStack Query, TypeScript, Tailwind CSS
 
 ---
 
 ## Key Design Decisions
 
-### 1. Data Modeling: Single Flat Table
+### 1. Flat Schema Over Normalization
 
-**Decision:** Store all execution data in one `AgentExecution` table, matching the provided `AgentExecutionMetrics` interface 1:1.
+**Decision:** Single `AgentExecution` table with all metrics denormalized.
 
-**Alternatives Considered:**
-- Normalized schema (separate tables for runs, LLM calls, tool calls)
-- Time-series database (InfluxDB, TimescaleDB)
+**Why:** The provided `AgentExecutionMetrics` interface maps 1:1 to this schema. Normalized tables (separate `llm_calls`, `tool_calls`) would require JOINs, slow down aggregations, and add 2+ hours of development time for marginal benefit at current scale.
 
-**Why Flat Table:**
-| Factor | Flat Table | Normalized |
-|--------|------------|------------|
-| Query complexity | Simple aggregations | JOINs needed |
-| Write performance | Single insert | Multiple inserts |
-| Schema matches spec | Yes, 1:1 | Requires transformation |
-| Development time | ~30 min | ~2+ hours |
-| Dashboard use case | Sufficient | Over-engineered |
+**Tradeoff:** Can't drill down to individual LLM/tool call details. Acceptable for aggregate dashboard use case; would revisit if detailed trace viewing is needed.
 
-**Tradeoff:** Less flexible for future call-level drill-down, but follows YAGNI principle for current requirements.
+### 2. Server-Side Aggregation
 
----
+**Decision:** All aggregations happen in PostgreSQL via Prisma `aggregate()`, `groupBy()`, and raw SQL `DATE_TRUNC`.
 
-### 2. Charting Library: Recharts
+**Why:** Client-side aggregation on 1000+ rows blocks UI rendering and consumes memory. Server-side keeps payloads small (<50KB) and leverages database indexes.
 
-**Decision:** Use Recharts for all data visualizations.
+**Tradeoff:** Backend must scale with user concurrency. Mitigated by query caching (future: Redis) and read replicas.
 
-**Alternatives Considered:**
-| Library | Pros | Cons |
-|---------|------|------|
-| **Recharts** | React-native, declarative, good TS, lightweight (~45kb) | Less flashy animations |
-| Tremor | Beautiful out-of-box, Tailwind-native | Extra abstraction layer |
-| Chart.js | Popular, many examples | Imperative API, less React-y |
-| Nivo | D3-based, beautiful | Heavier bundle (~150kb) |
-| Visx | Low-level D3 wrapper | Too low-level for dashboards |
+### 3. Recharts Over D3/Nivo
 
-**Why Recharts:**
-1. **Declarative API** fits React mental model
-2. **Responsive by default** with ResponsiveContainer
-3. **Good TypeScript support** for type-safe chart props
-4. **Lightweight** - fast initial load for dashboard
-5. **Active maintenance** - regular updates, good docs
+**Decision:** Use Recharts for all visualizations.
 
----
+**Why:** Declarative API (React-native), responsive by default, good TypeScript support, lightweight (~45KB). Alternatives like D3 require low-level imperative code; Nivo is heavier (~150KB).
 
-### 3. Aggregation Strategy: Server-Side
+**Tradeoff:** Less flashy animations than competitors. Acceptable for internal dashboard prioritizing clarity over aesthetics.
 
-**Decision:** Perform all aggregations in the database via Prisma, not in the browser.
+### 4. Three-Tab Organization
 
-**Why Server-Side:**
-```
-Client-Side Aggregation:
-1. Fetch 1000 raw rows (large payload)
-2. JavaScript processes in browser (slow, blocks UI)
-3. Memory pressure on client device
+**Decision:** Split metrics into Overview (health), Efficiency (optimization), Errors (debugging) tabs.
 
-Server-Side Aggregation:
-1. SQL/Prisma computes aggregates (optimized)
-2. Fetch only summary data (small payload)
-3. Fast render, no client computation
-```
+**Why:** Reduces cognitive load vs. single-page dashboard. Leadership cares about Overview (cost, success rate); Engineering uses Efficiency/Errors for optimization and incident response.
 
-**Implementation:**
-- Prisma `groupBy` for time-series buckets
-- Prisma `aggregate` for KPI summaries
-- Database indexes on `startTime`, `status`, `model`
-
----
-
-### 4. Time Bucketing: Daily Default
-
-**Decision:** Default to daily aggregation with option for hourly/weekly.
-
-**Rationale:**
-- 30 days of data = 30 data points (readable charts)
-- Hourly useful for debugging recent issues
-- Weekly useful for trend analysis over months
-
-**Implementation:**
-```sql
--- Daily bucket (Prisma raw query fallback if needed)
-SELECT
-  DATE_TRUNC('day', "startTime") as bucket,
-  COUNT(*) as count,
-  AVG("durationMs") as avgDuration
-FROM "AgentExecution"
-GROUP BY bucket
-ORDER BY bucket
-```
-
----
+**Tradeoff:** Users can't see all charts simultaneously. Mitigated by shared filter bar state across tabs.
 
 ### 5. Testing Strategy: Backend-Focused
 
-**Decision:** Prioritize backend aggregation tests over frontend component tests.
+**Decision:** Prioritize backend aggregation tests over frontend rendering tests.
 
-**Why:**
-- Aggregation logic is where bugs cause **incorrect dashboards**
-- Frontend is mostly "wiring" - tRPC data → Recharts
-- Time constraint (3-7 hours) requires prioritization
+**Why:** Bugs in aggregation logic (e.g., success rate calculation, cost per run) produce incorrect dashboards. Frontend is mostly "wiring" tRPC data to Recharts props.
 
-**Test Coverage:**
+**Tests included:**
+- ✅ Success rate calculation with filter edge cases
+- ✅ Daily time-series grouping accuracy
+- ✅ Cost/token aggregation with null handling
+- ✅ Cache hit rate formula validation
+- ✅ Empty dataset edge cases
 
-| Area | Priority | Tests |
-|------|----------|-------|
-| Aggregation logic | High | Success rate calc, daily grouping, cost sums |
-| Edge cases | High | Empty data, all failures, null costs |
-| API endpoints | Medium | Input validation, filter combinations |
-| Frontend rendering | Low | Basic smoke test (optional) |
+**Skipped:** E2E tests (no Playwright setup), frontend component tests (Recharts rendering).
 
-**Framework:** Vitest (fast, ESM-native, works with T3)
+**Tradeoff:** No visual regression testing. Acceptable for v1; would add Chromatic/Percy for production.
 
----
+### 6. Mock Data Distribution
 
-### 6. Mock Data: Realistic Distribution
+**Decision:** Seed 500-1000 realistic runs across 30 days with ~90% success rate, multiple models, and clustered failures.
 
-**Decision:** Generate synthetic data mimicking real-world patterns.
+**Why:** Charts need realistic-looking data for demo. Uniform distribution looks fake; clustered failures simulate real incident patterns.
 
-**Data Characteristics:**
-```typescript
-{
-  totalRuns: 500-1000,
-  timeSpan: 30 days,
-  models: ['gpt-4', 'gpt-4-turbo', 'claude-3-opus', 'claude-3-sonnet'],
-  successRate: ~90% (realistic for production agent),
-  duration: 5-120 seconds (normal distribution),
-  tokens: 500-50,000 (correlates with duration),
-  cost: Derived from model pricing,
-  failures: Some clustered (simulates incidents)
-}
-```
-
-**Why Realistic:**
-- Charts look believable for demo
-- Edge cases naturally occur (all-success days, high-cost outliers)
-- Leadership can evaluate dashboard with "real-looking" data
-
----
-
-### 7. Chart Metric Design: Reasonability & Filter Awareness
-
-**Problem Identified:** The original 3 line charts (Token Usage, Cost, Duration) had issues with metric reasonability when filters were applied.
-
-#### Issue Analysis
-
-**Original Implementation:**
-```
-Token Usage → SUM(tokens) per day
-Cost        → SUM(totalCostUsd) per day
-Duration    → AVG(durationMs) per day
-```
-
-**Problems discovered:**
-
-| Filter Applied | Metric | Problem |
-|----------------|--------|---------|
-| Status = "Success" | Cost | Hides "wasted" cost on failed runs - misleading for budget analysis |
-| Status = "Failure" | Duration | Shows failed run durations without context that these are incomplete executions |
-| Status = "Failure" | Tokens | Shows tokens consumed but user doesn't know these are "wasted" tokens |
-
-**Metric Correlation Analysis:**
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  NATURAL CORRELATIONS BETWEEN METRICS                       │
-├─────────────────────────────────────────────────────────────┤
-│  Token Usage ────→ Cost       (STRONG POSITIVE)             │
-│  • More tokens = higher cost (direct causal relationship)   │
-│  • Cost = f(model_price, tokens)                            │
-│                                                              │
-│  Duration ────→ Token Usage   (MODERATE POSITIVE)           │
-│  • Longer runs tend to use more tokens                       │
-│  • NOT always linear (retries, tool calls, API waits)       │
-│                                                              │
-│  Duration ────→ Cost          (WEAK/INDIRECT)               │
-│  • Relationship only via tokens                              │
-│  • 10s cheap model can cost less than 5s expensive model    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Verdict:** All 3 charts are necessary (not redundant) because:
-- Token Usage: Measures LLM workload
-- Cost: Measures spend (affected by model pricing, not just tokens)
-- Duration: Measures total time (includes non-LLM operations like tool calls)
-
-#### Solution Implemented
-
-**1. Cost Chart: Added "Cost per Run" Derived Metric**
-
-| Before | After |
-|--------|-------|
-| Single line showing `SUM(totalCostUsd)` | ComposedChart with bar (total) + line (per run) |
-| Volume changes distort cost perception | `costPerRun = totalCostUsd / count` normalizes the metric |
-
-**Why:** If you have 100 runs one day and 50 runs the next, total cost dropping 50% doesn't mean efficiency improved - it just means fewer runs. Cost per run reveals true efficiency.
-
-**2. Dynamic Subtitles Based on Active Filters**
-
-| Before | After |
-|--------|-------|
-| Static: "Daily spend in USD" | Dynamic: "Daily spend + cost per run (successful runs)" |
-| User doesn't know what data they're seeing | Subtitle explicitly states filter context |
-
-**Why:** When user filters to "Success only", subtitles update to remind them the scope of data being displayed.
-
-**3. Correlation Hints (Badge on Chart Header)**
-
-| Chart | Hint Displayed |
-|-------|----------------|
-| Token Usage | "Tokens drive Cost" |
-| Cost Analysis | "Cost = f(Tokens, Model)" |
-| Duration Trend | "Includes non-LLM time" |
-
-**Why:** Helps users understand metric relationships without documentation. Duration hint clarifies it's not pure LLM time.
-
-**4. Filter Warnings for Misleading States**
-
-| Filter | Chart | Warning Displayed |
-|--------|-------|-------------------|
-| Status = Success | Cost | "Showing only successful runs - cost of failed runs is hidden" |
-| Status = Failure | Cost | "Showing wasted spend on failed runs" |
-| Status = Failure | Duration | "Showing time spent on failed runs (may include partial execution)" |
-| Status = Failure | Tokens | "Tokens consumed before failure occurred" |
-
-**Why:** Proactively warns users when filter + metric combination could lead to misinterpretation.
-
-#### Files Changed
-
-| File | Change |
-|------|--------|
-| `CostChart.tsx` | LineChart → ComposedChart with dual Y-axis (total + per run) |
-| `ChartCard.tsx` | Added `correlationHint` and `filterWarning` props |
-| `Dashboard.tsx` | Added helper functions for dynamic subtitles and warnings |
-
-#### Visual Result
-
-```
-┌─────────────────────────────────────────────────────┐
-│ Cost Analysis                    [Cost = f(Tokens)] │
-│ Daily spend + cost per run (successful runs)        │
-│ ⚠️ Showing only successful runs - cost hidden       │
-├─────────────────────────────────────────────────────┤
-│  [$] Total Cost (bar)    [—] Cost per Run (line)   │
-│  Left Y-axis: $0-100     Right Y-axis: $0.00-1.00  │
-└─────────────────────────────────────────────────────┘
-```
-
----
-
-## Metrics Displayed
-
-### Core Metrics (Required)
-
-| Metric | Visualization | Aggregation | Why It Matters |
-|--------|---------------|-------------|----------------|
-| **Execution Count** | Bar/Line chart | COUNT per day | Volume trends, capacity planning |
-| **Success Rate** | Stacked bar + Pie | COUNT GROUP BY status | Reliability indicator |
-| **Duration** | Line chart | AVG(durationMs) per day | Performance monitoring |
-| **Token Usage** | Stacked area | SUM(input/output/total) | Cost driver, model efficiency |
-| **Cost (USD)** | Line chart | SUM(reportedCostUsd) | Budget tracking |
-| **LLM Call Count** | Bar chart | SUM(llmCallCount) | Agent complexity |
-| **Tool Call Count** | Bar chart | SUM(toolCallsCount) | Agent behavior |
-
-### Extended Metrics (Product Thinking)
-
-| Metric | Value | Audience |
-|--------|-------|----------|
-| **Cost per Success** | Total cost / successful runs | Leadership - ROI |
-| **Cost per Failure** | Cost of failed runs | Engineering - waste |
-| **Cache Hit Rate** | cacheReadTokens / inputTokens | Engineering - optimization |
-| **Avg Files Modified** | Productivity proxy | Leadership |
-| **Model Comparison** | Stats by model | Engineering - model selection |
-
-### Metrics NOT Included (and why)
-
-| Metric | Reason |
-|--------|--------|
-| P95/P99 latency | Requires raw data; AVG sufficient for v1 |
-| Error categorization | Needs NLP on errorMessage; future feature |
-| User-level breakdown | No user ID in schema |
-| Geographic distribution | No location data |
-
----
-
-## Filters
-
-| Filter | Options | Implementation |
-|--------|---------|----------------|
-| **Date Range** | Last 7d, 30d, 90d, Custom | URL query params + Prisma WHERE |
-| **Status** | All, Success, Failure | Dropdown, filters API query |
-| **Model** | All, [dynamic list] | Fetched from `metrics.getModels` |
-
-**State Management:** URL search params (shareable dashboard links)
+**Tradeoff:** Seed data doesn't match production distribution. Mitigated by clear labeling as "mock data" in UI (future).
 
 ---
 
 ## Assumptions Made
 
-1. **Status values:** Field contains strings like `'success'`, `'failure'`, `'error'`
-2. **Cost pre-calculated:** `reportedCostUsd` is provided; no need to compute from tokens
+1. **Status values:** Field contains strings `'success'` or `'failure'` (not `'error'` or other variants)
+2. **Cost pre-calculated:** `reportedCostUsd` is provided by agent runtime; dashboard doesn't compute from tokens
 3. **Duration:** Computed as `endTime - startTime` in milliseconds
-4. **No auth required:** Internal tool assumption per spec
-5. **PostgreSQL:** Database choice; schema uses PG-specific features (arrays, decimal)
-6. **Timezone:** All timestamps stored in UTC; display in browser's local timezone
-7. **Invocation uniqueness:** `invocationId` is unique when present
+4. **No auth required:** Internal tool assumption per assignment spec
+5. **PostgreSQL available:** Database choice with PG-specific features (arrays, `DECIMAL`, `DATE_TRUNC`)
+6. **Timezone:** All timestamps stored in UTC; browser displays in local time
+7. **Single invocation per run:** `invocationId` is unique when present
 
 ---
 
 ## Known Limitations
 
-1. **No real-time updates:** Dashboard requires refresh for new data
-2. **No drill-down:** Can't click chart point to see individual runs (would add in v2)
-3. **No export:** No CSV/JSON download functionality
-4. **Basic date picker:** Uses simple dropdown, not calendar widget
-5. **No persistence of filters:** Filters reset on page reload (URL params would fix)
-6. **No anomaly detection:** Doesn't highlight unusual cost/duration spikes
+1. **No real-time updates** — Dashboard requires refresh for new data (polling planned for v2)
+2. **No drill-down** — Can't click chart point to see individual runs (modal planned)
+3. **No export** — No CSV/JSON download functionality
+4. **Basic date picker** — Simple dropdown (7d/30d/90d), no calendar widget
+5. **No filter persistence** — Filters reset on page reload (URL params solution ready)
+6. **No anomaly detection** — Doesn't highlight unusual cost/duration spikes
+
+**Edge cases handled:**
+- Empty data states (graceful "No data" messages)
+- Null costs (COALESCE fallbacks)
+- All-failure datasets (success rate = 0%, not NaN)
+- Filter-aware success rate (100% when filtering status="success")
 
 ---
 
-## Data Modeling for Scale
+## Next Steps with More Time
 
-**Current design works for:** ~100k rows, single dashboard user
+### Immediate Wins (< 1 day)
+1. **URL-persisted filters** — Make dashboard state shareable via query params
+2. **CSV export** — Download filtered data for external analysis
+3. **Custom date ranges** — Calendar picker for arbitrary time windows
+4. **Error message truncation** — Show full error on hover (currently cuts at 100 chars)
 
-**For production scale (millions of rows):**
+### High-Value Features (2-3 days)
+5. **Drill-down modals** — Click chart point → see individual runs with full details
+6. **Polling for real-time** — Auto-refresh every 30s with visual indicator
+7. **Dark mode** — Essential for monitoring dashboards used 24/7
+8. **Anomaly detection** — Highlight cost/duration spikes >2σ from baseline
+9. **Alert configuration UI** — Set thresholds for failure rate, cost anomalies
 
-| Challenge | Solution |
-|-----------|----------|
-| Slow aggregations | Pre-computed daily rollups table |
-| Large table scans | Partitioning by month |
-| Concurrent users | Redis caching for common queries |
-| Real-time | Change data capture → streaming aggregation |
-
-**Schema Evolution:**
-```prisma
-// Add rollup table for pre-aggregated data
-model DailyMetricsRollup {
-  id          String   @id @default(cuid())
-  date        DateTime @db.Date
-  model       String
-  status      String
-  runCount    Int
-  totalTokens BigInt
-  totalCostUsd Decimal
-  avgDurationMs Int
-
-  @@unique([date, model, status])
-  @@index([date])
-}
-```
+### Production Scale (1-2 weeks)
+10. **Pre-aggregated rollup tables** — Daily summaries for sub-second dashboard load
+11. **Redis caching layer** — Cache hot queries (getSummary, getTimeSeries)
+12. **Table partitioning** — Partition by month for fast archival and range queries
+13. **Read replicas** — Offload dashboard queries from primary database
+14. **P95/P99 latency tracking** — Percentile calculations for tail latency issues
+15. **User-level attribution** — Add `userId` to schema for cost/failure tracking per user
 
 ---
 
-## API Reference
+## Testing
 
-### `metrics.getSummary`
-
-Returns aggregated KPIs for the filtered dataset.
-
-**Input:**
-```typescript
-{
-  startDate: Date,
-  endDate: Date,
-  status?: 'success' | 'failure' | 'all',
-  model?: string
-}
+**Run tests:**
+```bash
+pnpm test
 ```
 
-**Output:**
-```typescript
-{
-  totalRuns: number,
-  successCount: number,
-  failureCount: number,
-  successRate: number,        // 0-100
-  avgDurationMs: number,
-  totalCostUsd: number,
-  totalTokens: number,
-  avgLlmCalls: number,
-  avgToolCalls: number
-}
-```
+**Test coverage:** Backend aggregation logic (success rate, daily grouping, null handling, cache hit rate). See `src/server/api/routers/__tests__/metrics.test.ts`.
 
-### `metrics.getTimeSeries`
-
-Returns time-bucketed data for charts.
-
-**Input:**
-```typescript
-{
-  startDate: Date,
-  endDate: Date,
-  granularity: 'hour' | 'day' | 'week',
-  status?: string,
-  model?: string
-}
-```
-
-**Output:**
-```typescript
-Array<{
-  date: Date,
-  count: number,
-  successCount: number,
-  failureCount: number,
-  avgDurationMs: number,
-  totalCostUsd: number,
-  inputTokens: number,
-  outputTokens: number,
-  totalTokens: number
-}>
-```
-
-### `metrics.getModels`
-
-Returns distinct models for filter dropdown.
-
-**Output:**
-```typescript
-string[]  // e.g., ['gpt-4', 'claude-3-opus', ...]
-```
+**Why backend-focused:** Aggregation bugs cause incorrect dashboards. Frontend is mostly declarative Recharts wiring. Time constraint (3-7 hours) required prioritization.
 
 ---
 
-## Project Structure
+## Documentation
 
-```
-fixer_metrics/
-├── prisma/
-│   ├── schema.prisma        # Database schema
-│   └── seed.ts              # Mock data generator
-├── src/
-│   ├── app/
-│   │   ├── page.tsx         # Dashboard page
-│   │   └── _components/
-│   │       └── dashboard/
-│   │           ├── FilterBar.tsx
-│   │           ├── KPICards.tsx
-│   │           └── charts/
-│   │               ├── ExecutionsChart.tsx
-│   │               ├── SuccessRateChart.tsx
-│   │               ├── TokenUsageChart.tsx
-│   │               ├── CostChart.tsx
-│   │               └── DurationChart.tsx
-│   ├── server/
-│   │   ├── db.ts            # Prisma client
-│   │   └── api/
-│   │       ├── root.ts      # tRPC app router
-│   │       ├── trpc.ts      # tRPC setup
-│   │       └── routers/
-│   │           ├── metrics.ts           # Metrics endpoints
-│   │           └── __tests__/
-│   │               └── metrics.test.ts  # Backend tests
-│   └── trpc/
-│       ├── react.tsx        # tRPC React hooks
-│       └── server.ts        # Server-side tRPC
-├── vitest.config.ts         # Test configuration
-├── README.md                # This file
-└── docs/
-    └── DESIGN.md            # Extended write-up (optional)
-```
+- **[WRITEUP.md](./WRITEUP.md)** — Technical deep dive: metrics rationale, production scaling, edge cases (1,750 words)
+- **[docs/DESIGN-GUIDE.md](./docs/DESIGN-GUIDE.md)** — Chart design decisions, filter warnings, correlation hints
+- **Architecture details** — See "Key Design Decisions" section above
+
+---
+
+## Questions Answered by This Dashboard
+
+This dashboard helps answer 19 operational questions across 5 categories:
+
+**Cost Analysis (4 questions):**
+- How much are we spending daily?
+- What's the cost per run?
+- Cost per successful run?
+- How much wasted on failures?
+
+**Reliability Monitoring (5 questions):**
+- Overall success rate?
+- Success rate trend over time?
+- Success rate by model?
+- What errors are occurring?
+- Error frequency by type?
+
+**Performance Tracking (3 questions):**
+- Average run duration?
+- Duration trend over time?
+- Which model is fastest?
+
+**Token Usage Insights (4 questions):**
+- Total tokens consumed daily?
+- Input vs output token split?
+- Tokens per run?
+- Cache hit rate?
+
+**Agent Behavior (3 questions):**
+- Avg LLM calls per run?
+- Avg tool calls per run?
+- Files modified per run?
+
+**See full mapping:** Each question is mapped to specific KPI cards, charts, and tabs in the dashboard UI.
 
 ---
 
@@ -547,66 +236,4 @@ DATABASE_URL="postgresql://user:password@localhost:5432/fixer_metrics"
 
 ## License
 
-
-  #        │                Question                 │   Status   │                  Where Shown                   │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ COST           │                                         │            │                                                │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 1              │ How much are we spending daily?         │ ✅ Yes     │ CostChart (Overview tab)                       │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 2              │ What's the cost per run?                │ ✅ Yes     │ CostChart (dual Y-axis)                        │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 3              │ Cost per successful run?                │ ✅ Yes     │ KPICards "Cost/Success" + EfficiencyTab        │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 4              │ How much wasted on failures?            │ ✅ Yes     │ KPICards "Wasted Spend" + ErrorsTab            │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 5              │ Which model costs most per run?         │ ❌ No      │ ModelComparison shows total cost, not cost/run │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ RELIABILITY    │                                         │            │                                                │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 6              │ Overall success rate?                   │ ✅ Yes     │ KPICards "Success Rate"                        │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 7              │ Success rate trend over time?           │ ✅ Yes     │ SuccessRateChart                               │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 8              │ Success rate by model?                  │ ✅ Yes     │ ModelComparison table                          │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 9              │ What errors are occurring?              │ ✅ Yes     │ ErrorBreakdownChart (Errors tab)               │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 10             │ Error frequency by type?                │ ✅ Yes     │ ErrorBreakdownChart (grouped, top 10)          │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ PERFORMANCE    │                                         │            │                                                │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 11             │ Average run duration?                   │ ✅ Yes     │ KPICards "Avg Duration"                        │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 12             │ Duration trend over time?               │ ✅ Yes     │ DurationChart                                  │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 13             │ Which model is fastest?                 │ ✅ Yes     │ ModelComparison "Avg Duration" column          │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 14             │ Duration by status?                     │ ❌ No      │ Not split by success/failure                   │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ TOKEN USAGE    │                                         │            │                                                │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 15             │ Total tokens consumed daily?            │ ✅ Yes     │ TokenUsageChart                                │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 16             │ Input vs output token split?            │ ✅ Yes     │ TokenUsageChart (stacked)                      │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 17             │ Tokens per run?                         │ ✅ Yes     │ EfficiencyTab "Tokens per Run" KPI             │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 18             │ Cache hit rate?                         │ ✅ Yes     │ EfficiencyTab KPI + CacheChart                 │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 19             │ Cache efficiency by model?              │ ❌ No      │ Only overall, not per model                    │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ AGENT BEHAVIOR │                                         │            │                                                │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 20             │ Avg LLM calls per run?                  │ ⚠️ Partial │ API returns it, not prominently displayed      │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 21             │ Avg tool calls per run?                 │ ⚠️ Partial │ API returns it, not prominently displayed      │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 22             │ Files modified per run?                 │ ✅ Yes     │ ModelComparison "Avg Files" column             │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 23             │ LLM calls vs tool calls ratio?          │ ❌ No      │ Not calculated                                 │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 24             │ Does more LLM calls = higher cost?      │ ❌ No      │ No correlation chart                           │                                                    
-  ├────────────────┼─────────────────────────────────────────┼────────────┼────────────────────────────────────────────────┤                                                    
-  │ 25             │ Does more tool calls = longer duration? │ ❌ No      │ No correlation chart                           │                                                    
-  └────────────────┴─────────────────────────────────────────┴────────────┴────────────────────────────────────────────────┘  
+MIT
