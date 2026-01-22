@@ -87,6 +87,16 @@ export const metricsRouter = createTRPCRouter({
       const successCount = statusCounts.find((s) => s.status === "success")?._count ?? 0;
       const failureCount = statusCounts.find((s) => s.status === "failure")?._count ?? 0;
 
+      // Calculate filtered success count based on status filter
+      let filteredSuccessCount: number;
+      if (input.status === "success") {
+        filteredSuccessCount = totalRuns; // All filtered runs are successes
+      } else if (input.status === "failure") {
+        filteredSuccessCount = 0; // No successes in failure-filtered results
+      } else {
+        filteredSuccessCount = successCount; // Use overall success count
+      }
+
       const totalCostUsd = aggregates._sum.reportedCostUsd?.toNumber() ?? 0;
       const successCost = successCostAgg._sum.reportedCostUsd?.toNumber() ?? 0;
       const successCostCount = successCostAgg._count;
@@ -101,7 +111,7 @@ export const metricsRouter = createTRPCRouter({
         totalRuns,
         successCount,
         failureCount,
-        successRate: totalRuns > 0 ? (successCount / totalRuns) * 100 : 0,
+        successRate: totalRuns > 0 ? (filteredSuccessCount / totalRuns) * 100 : 0,
         avgDurationMs: aggregates._avg.durationMs ?? 0,
         totalCostUsd,
         totalTokens: aggregates._sum.totalTokens ?? 0,
@@ -312,13 +322,22 @@ export const metricsRouter = createTRPCRouter({
         const filesData = filesPerModel.get(stat.model);
         const avgFilesModified = filesData ? filesData.total / filesData.count : 0;
 
+        // Calculate success rate based on status filter
+        let successRate: number;
+        if (input.status === "success") {
+          successRate = 100; // All filtered runs are successes
+        } else if (input.status === "failure") {
+          successRate = 0; // No successes in failure-filtered results
+        } else {
+          successRate = stat._count > 0
+            ? ((successMap.get(stat.model) ?? 0) / stat._count) * 100
+            : 0;
+        }
+
         return {
           model: stat.model,
           totalRuns: stat._count,
-          successRate:
-            stat._count > 0
-              ? ((successMap.get(stat.model) ?? 0) / stat._count) * 100
-              : 0,
+          successRate,
           avgDurationMs: stat._avg.durationMs ?? 0,
           avgLlmCalls: stat._avg.llmCallCount ?? 0,
           avgToolCalls: stat._avg.toolCallsCount ?? 0,

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { api } from "~/trpc/react";
 import { subDays, startOfDay, endOfDay } from "date-fns";
-import { FilterBar } from "./FilterBar";
+import { FilterBar, type StatusFilter } from "./FilterBar";
 import { KPICards } from "./KPICards";
 import { DashboardTabs, type TabId } from "./DashboardTabs";
 import { OverviewTab } from "./tabs/OverviewTab";
@@ -21,16 +21,17 @@ function getDefaultDateRange(): DateRange {
 export function Dashboard() {
   const [dateRange, setDateRange] = useState<DateRange>(getDefaultDateRange);
   const [model, setModel] = useState<string>("");
+  const [status, setStatus] = useState<StatusFilter>("all");
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   const filterInput = useMemo(
     () => ({
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
-      status: "all" as const,
+      status: status,
       model: model || undefined,
     }),
-    [dateRange, model]
+    [dateRange, model, status]
   );
 
   // Query configuration
@@ -103,8 +104,10 @@ export function Dashboard() {
             dateRange={dateRange}
             model={model}
             models={models}
+            status={status}
             onDateRangeChange={setDateRange}
             onModelChange={setModel}
+            onStatusChange={setStatus}
           />
         </div>
         <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -117,6 +120,8 @@ export function Dashboard() {
           successRate={summary?.successRate ?? 0}
           avgDurationMs={summary?.avgDurationMs ?? 0}
           totalCostUsd={summary?.totalCostUsd ?? 0}
+          avgLlmCalls={summary?.avgLlmCalls ?? 0}
+          avgToolCalls={summary?.avgToolCalls ?? 0}
           isLoading={summaryLoading}
         />
       )}

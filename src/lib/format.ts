@@ -1,7 +1,15 @@
 /**
  * Format a number with commas for thousands
+ * @param num - The number to format
+ * @param decimals - Optional number of decimal places (default: 0, rounds to integer)
  */
-export function formatNumber(num: number): string {
+export function formatNumber(num: number, decimals?: number): string {
+  if (decimals !== undefined && decimals > 0) {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(num);
+  }
   return new Intl.NumberFormat('en-US').format(Math.round(num));
 }
 

@@ -73,7 +73,7 @@ export function CostChart({ data, isLoading }: CostChartProps) {
           labelFormatter={(value) => formatDateLong(value as Date | string)}
           formatter={(value, name) => [
             formatCurrency(Number(value) || 0),
-            name === "totalCostUsd" ? "Total Cost" : "Cost per Run",
+            name,
           ]}
         />
         <Legend {...chartConfig.legend} />

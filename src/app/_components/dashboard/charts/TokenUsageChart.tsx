@@ -54,7 +54,7 @@ export function TokenUsageChart({ data, isLoading }: TokenUsageChartProps) {
           labelFormatter={(value) => formatDateLong(value as Date | string)}
           formatter={(value, name) => [
             formatTokens(Number(value) || 0),
-            name === "inputTokens" ? "Input Tokens" : "Output Tokens",
+            name,
           ]}
         />
         <Legend {...chartConfig.legend} />
