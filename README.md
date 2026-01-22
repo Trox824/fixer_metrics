@@ -195,6 +195,116 @@ ORDER BY bucket
 
 ---
 
+### 7. Chart Metric Design: Reasonability & Filter Awareness
+
+**Problem Identified:** The original 3 line charts (Token Usage, Cost, Duration) had issues with metric reasonability when filters were applied.
+
+#### Issue Analysis
+
+**Original Implementation:**
+```
+Token Usage → SUM(tokens) per day
+Cost        → SUM(totalCostUsd) per day
+Duration    → AVG(durationMs) per day
+```
+
+**Problems discovered:**
+
+| Filter Applied | Metric | Problem |
+|----------------|--------|---------|
+| Status = "Success" | Cost | Hides "wasted" cost on failed runs - misleading for budget analysis |
+| Status = "Failure" | Duration | Shows failed run durations without context that these are incomplete executions |
+| Status = "Failure" | Tokens | Shows tokens consumed but user doesn't know these are "wasted" tokens |
+
+**Metric Correlation Analysis:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  NATURAL CORRELATIONS BETWEEN METRICS                       │
+├─────────────────────────────────────────────────────────────┤
+│  Token Usage ────→ Cost       (STRONG POSITIVE)             │
+│  • More tokens = higher cost (direct causal relationship)   │
+│  • Cost = f(model_price, tokens)                            │
+│                                                              │
+│  Duration ────→ Token Usage   (MODERATE POSITIVE)           │
+│  • Longer runs tend to use more tokens                       │
+│  • NOT always linear (retries, tool calls, API waits)       │
+│                                                              │
+│  Duration ────→ Cost          (WEAK/INDIRECT)               │
+│  • Relationship only via tokens                              │
+│  • 10s cheap model can cost less than 5s expensive model    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Verdict:** All 3 charts are necessary (not redundant) because:
+- Token Usage: Measures LLM workload
+- Cost: Measures spend (affected by model pricing, not just tokens)
+- Duration: Measures total time (includes non-LLM operations like tool calls)
+
+#### Solution Implemented
+
+**1. Cost Chart: Added "Cost per Run" Derived Metric**
+
+| Before | After |
+|--------|-------|
+| Single line showing `SUM(totalCostUsd)` | ComposedChart with bar (total) + line (per run) |
+| Volume changes distort cost perception | `costPerRun = totalCostUsd / count` normalizes the metric |
+
+**Why:** If you have 100 runs one day and 50 runs the next, total cost dropping 50% doesn't mean efficiency improved - it just means fewer runs. Cost per run reveals true efficiency.
+
+**2. Dynamic Subtitles Based on Active Filters**
+
+| Before | After |
+|--------|-------|
+| Static: "Daily spend in USD" | Dynamic: "Daily spend + cost per run (successful runs)" |
+| User doesn't know what data they're seeing | Subtitle explicitly states filter context |
+
+**Why:** When user filters to "Success only", subtitles update to remind them the scope of data being displayed.
+
+**3. Correlation Hints (Badge on Chart Header)**
+
+| Chart | Hint Displayed |
+|-------|----------------|
+| Token Usage | "Tokens drive Cost" |
+| Cost Analysis | "Cost = f(Tokens, Model)" |
+| Duration Trend | "Includes non-LLM time" |
+
+**Why:** Helps users understand metric relationships without documentation. Duration hint clarifies it's not pure LLM time.
+
+**4. Filter Warnings for Misleading States**
+
+| Filter | Chart | Warning Displayed |
+|--------|-------|-------------------|
+| Status = Success | Cost | "Showing only successful runs - cost of failed runs is hidden" |
+| Status = Failure | Cost | "Showing wasted spend on failed runs" |
+| Status = Failure | Duration | "Showing time spent on failed runs (may include partial execution)" |
+| Status = Failure | Tokens | "Tokens consumed before failure occurred" |
+
+**Why:** Proactively warns users when filter + metric combination could lead to misinterpretation.
+
+#### Files Changed
+
+| File | Change |
+|------|--------|
+| `CostChart.tsx` | LineChart → ComposedChart with dual Y-axis (total + per run) |
+| `ChartCard.tsx` | Added `correlationHint` and `filterWarning` props |
+| `Dashboard.tsx` | Added helper functions for dynamic subtitles and warnings |
+
+#### Visual Result
+
+```
+┌─────────────────────────────────────────────────────┐
+│ Cost Analysis                    [Cost = f(Tokens)] │
+│ Daily spend + cost per run (successful runs)        │
+│ ⚠️ Showing only successful runs - cost hidden       │
+├─────────────────────────────────────────────────────┤
+│  [$] Total Cost (bar)    [—] Cost per Run (line)   │
+│  Left Y-axis: $0-100     Right Y-axis: $0.00-1.00  │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Metrics Displayed
 
 ### Core Metrics (Required)

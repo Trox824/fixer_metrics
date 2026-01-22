@@ -2,12 +2,16 @@ import { PrismaClient, Prisma } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
-// Models with their token pricing (per 1M tokens)
+// Models with their token pricing (per 1M tokens) - Latest January 2026 models
 const MODELS = [
-  { name: "gpt-4", inputCost: 30, outputCost: 60 },
-  { name: "gpt-4-turbo", inputCost: 10, outputCost: 30 },
-  { name: "claude-3-opus", inputCost: 15, outputCost: 75 },
-  { name: "claude-3-sonnet", inputCost: 3, outputCost: 15 },
+  // OpenAI latest models
+  { name: "gpt-5.2", inputCost: 1.75, outputCost: 14 },
+  { name: "gpt-5.2-pro", inputCost: 3.5, outputCost: 28 },
+  { name: "gpt-5.1-codex-max", inputCost: 2, outputCost: 16 },
+  // Anthropic latest models
+  { name: "claude-opus-4-5", inputCost: 15, outputCost: 75 },
+  { name: "claude-sonnet-4-5", inputCost: 3, outputCost: 15 },
+  { name: "claude-haiku-4-5", inputCost: 0.8, outputCost: 4 },
 ] as const;
 
 const STATUSES = ["success", "failure", "error"] as const;

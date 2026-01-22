@@ -3,4 +3,50 @@
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Base */
+  --color-background: #FAFAFA;
+  --color-foreground: #0F172A;
+
+  /* Surfaces */
+  --color-card: #FFFFFF;
+  --color-muted: #F1F5F9;
+  --color-muted-foreground: #64748B;
+
+  /* Borders */
+  --color-border: #E2E8F0;
+  --color-border-subtle: #F1F5F9;
+
+  /* Primary Accent (Electric Blue) */
+  --color-accent: #0052FF;
+  --color-accent-secondary: #4D7CFF;
+  --color-accent-foreground: #FFFFFF;
+  --color-accent-muted: rgba(0, 82, 255, 0.08);
+
+  /* Status Colors */
+  --color-success: #10B981;
+  --color-success-muted: rgba(16, 185, 129, 0.1);
+  --color-error: #EF4444;
+  --color-error-muted: rgba(239, 68, 68, 0.1);
+  --color-warning: #F59E0B;
+  --color-warning-muted: rgba(245, 158, 11, 0.1);
+
+  /* Chart Palette */
+  --color-chart-1: #0052FF;
+  --color-chart-2: #10B981;
+  --color-chart-3: #8B5CF6;
+  --color-chart-4: #F59E0B;
+  --color-chart-5: #EC4899;
+  --color-chart-6: #06B6D4;
+
+  /* Inverted Section */
+  --color-inverted-bg: #0F172A;
+  --color-inverted-text: rgba(255, 255, 255, 0.95);
+  --color-inverted-muted: rgba(255, 255, 255, 0.6);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
