@@ -37,16 +37,8 @@ The dashboard is organized into **three specialized tabs** serving distinct stak
 4. **P95/P99 latency** - Identifies tail latency issues invisible in averages (percentile SQL functions, 2-3 days)
 5. **Anomaly detection** - Highlight cost/duration spikes >2σ from baseline (statistical calculation + visual indicators, 3 days)
 
-**Blocked on Schema Changes:**
-6. **User-level breakdown** - Attribution of costs/failures per user (requires userId field + RBAC, 1 week)
-7. **Geographic distribution** - Latency analysis by region (requires location data, 1 week)
-
-### Alerts (Not Yet Implemented)
-
 Critical for production ops:
 1. **Failure rate threshold** - Alert if success rate <85% over 1-hour window
-2. **Cost anomaly** - Alert if daily spend exceeds 2σ from 7-day rolling average
-3. **Zero traffic** - Alert if no executions in 30 minutes (system outage detection)
 
 ### UX Improvements
 
@@ -156,4 +148,3 @@ This dashboard prioritizes **actionable insights over raw data dumps**. Three sp
 
 **Key tradeoff:** Optimized for v1 speed (3-7 hour constraint) over production features (real-time updates, anomaly detection, drill-down). The path to production scale is clear and documented above.
 
-**Word count:** ~1,000 words (2 pages)

@@ -114,9 +114,8 @@ The flat schema design prioritizes development speed over query flexibility - al
 1. **No real-time updates** — Dashboard requires refresh for new data (polling planned for v2)
 2. **No drill-down** — Can't click chart point to see individual runs (modal planned)
 3. **No export** — No CSV/JSON download functionality
-4. **Basic date picker** — Simple dropdown (7d/30d/90d), no calendar widget
-5. **No filter persistence** — Filters reset on page reload (URL params solution ready)
-6. **No anomaly detection** — Doesn't highlight unusual cost/duration spikes
+4. **No filter persistence** — Filters reset on page reload (URL params solution ready)
+5. **No anomaly detection** — Doesn't highlight unusual cost/duration spikes
 
 **Edge cases handled:**
 - Empty data states (graceful "No data" messages)
@@ -131,13 +130,11 @@ The flat schema design prioritizes development speed over query flexibility - al
 ### Immediate Wins (< 1 day)
 1. **URL-persisted filters** — Make dashboard state shareable via query params
 2. **CSV export** — Download filtered data for external analysis
-3. **Custom date ranges** — Calendar picker for arbitrary time windows
 4. **Error message truncation** — Show full error on hover (currently cuts at 100 chars)
 
 ### High-Value Features (2-3 days)
 5. **Drill-down modals** — Click chart point → see individual runs with full details
 6. **Polling for real-time** — Auto-refresh every 30s with visual indicator
-7. **Dark mode** — Essential for monitoring dashboards used 24/7
 8. **Anomaly detection** — Highlight cost/duration spikes >2σ from baseline
 9. **Alert configuration UI** — Set thresholds for failure rate, cost anomalies
 

@@ -27,67 +27,6 @@ const filterSchema = filterSchemaBase.refine(
 // HELPER FUNCTIONS
 // ============================================================================
 
-// Granularity whitelist to prevent SQL injection (validated by zod, but extra safety)
-const GRANULARITY_MAP = { hour: "hour", day: "day", week: "week" } as const;
-type Granularity = keyof typeof GRANULARITY_MAP;
-
-/**
- * Build a Prisma WHERE clause from filter input.
- * Used for standard Prisma queries (aggregate, groupBy, findMany).
- */
-function buildWhereClause(input: {
-  startDate: Date;
-  endDate: Date;
-  status?: string;
-  model?: string;
-}): Prisma.AgentExecutionWhereInput {
-  return {
-    startTime: {
-      gte: input.startDate,
-      lte: input.endDate,
-    },
-    ...(input.status && input.status !== "all" && { status: input.status }),
-    ...(input.model && { model: input.model }),
-  };
-}
-
-/**
- * Build a raw SQL WHERE clause using Prisma.sql for parameterized queries.
- * Used for raw SQL queries requiring DATE_TRUNC and FILTER clauses.
- */
-function buildSqlConditions(input: {
-  startDate: Date;
-  endDate: Date;
-  status?: string;
-  model?: string;
-}): Prisma.Sql {
-  const conditions: Prisma.Sql[] = [
-    Prisma.sql`"startTime" >= ${input.startDate}`,
-    Prisma.sql`"startTime" <= ${input.endDate}`,
-  ];
-  if (input.status && input.status !== "all") {
-    conditions.push(Prisma.sql`"status" = ${input.status}`);
-  }
-  if (input.model) {
-    conditions.push(Prisma.sql`"model" = ${input.model}`);
-  }
-  return Prisma.join(conditions, " AND ");
-}
-
-/**
- * Calculate success rate based on status filter.
- * When filtering by status, the rate is deterministic (100% for success, 0% for failure).
- */
-function calculateFilteredSuccessRate(
-  status: string,
-  totalRuns: number,
-  successCount: number
-): number {
-  if (status === "success") return 100;
-  if (status === "failure") return 0;
-  return totalRuns > 0 ? (successCount / totalRuns) * 100 : 0;
-}
-
 export const metricsRouter = createTRPCRouter({
   /**
    * Get aggregated summary KPIs for the filtered dataset

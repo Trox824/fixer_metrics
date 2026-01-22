@@ -74,11 +74,10 @@ export function Dashboard() {
   const utils = api.useUtils();
 
   // Fetch data with error states
-  const { data: models = [], isError: modelsError } =
-    api.metrics.getModels.useQuery(undefined, {
-      staleTime: MODELS_STALE_TIME,
-      gcTime: MODELS_STALE_TIME * 2,
-    });
+  const { data: models = [] } = api.metrics.getModels.useQuery(undefined, {
+    staleTime: MODELS_STALE_TIME,
+    gcTime: MODELS_STALE_TIME * 2,
+  });
 
   const {
     data: summary,
@@ -103,7 +102,6 @@ export function Dashboard() {
   const {
     data: modelComparison = [],
     isLoading: modelComparisonLoading,
-    isError: modelComparisonError,
   } = api.metrics.getModelComparison.useQuery(filterInput, {
     staleTime: DATA_STALE_TIME,
   });
