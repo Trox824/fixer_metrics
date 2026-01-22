@@ -26,6 +26,10 @@ Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
 ---
 
+> **Technical Deep Dive:** For detailed information about metrics selection rationale, production scaling strategies, edge cases, and architectural decisions, see **[WRITEUP.md](./WRITEUP.md)**.
+
+---
+
 ## Architecture Overview
 
 This dashboard uses the **T3 Stack** (Next.js 15 + tRPC + Prisma + TypeScript) for end-to-end type safety and rapid development. The frontend consists of three specialized tabs (Overview, Efficiency, Errors) with 9 Recharts visualizations and dynamic filter bars. The backend exposes 8 tRPC procedures that perform server-side aggregation via Prisma ORM and raw SQL queries against a single PostgreSQL table (`AgentExecution`).
