@@ -36,6 +36,32 @@ The flat schema design prioritizes development speed over query flexibility - al
 
 ---
 
+## Metrics Displayed
+
+### Core Metrics (Required)
+
+| Metric | Visualization | Aggregation | Why It Matters |
+|--------|---------------|-------------|----------------|
+| **Execution Count** | Bar/Line chart | COUNT per day | Volume trends, capacity planning |
+| **Success Rate** | Stacked bar + Pie | COUNT GROUP BY status | Reliability indicator |
+| **Duration** | Line chart | AVG(durationMs) per day | Performance monitoring |
+| **Token Usage** | Stacked area | SUM(input/output/total) | Cost driver, model efficiency |
+| **Cost (USD)** | Line chart | SUM(reportedCostUsd) | Budget tracking |
+| **LLM Call Count** | Bar chart | SUM(llmCallCount) | Agent complexity |
+| **Tool Call Count** | Bar chart | SUM(toolCallsCount) | Agent behavior |
+
+### Extended Metrics (Product Thinking)
+
+| Metric | Value | Audience |
+|--------|-------|----------|
+| **Cost per Success** | Total cost / successful runs | Leadership - ROI |
+| **Cost per Failure** | Cost of failed runs | Engineering - waste |
+| **Cache Hit Rate** | cacheReadTokens / inputTokens | Engineering - optimization |
+| **Avg Files Modified** | Productivity proxy | Leadership |
+| **Model Comparison** | Stats by model | Engineering - model selection |
+
+---
+
 ## Key Design Decisions
 
 ### 1. Flat Schema Over Normalization

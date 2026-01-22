@@ -119,18 +119,18 @@ Offload dashboard queries to read replicas. Primary handles writes, replicas ser
 
 ### Edge Cases Handled
 
-✅ **Empty datasets** - Charts show "No data available" with filter adjustment suggestions
-✅ **All-failure runs** - Success rate displays 0% (not NaN), cost-per-success shows "N/A"
-✅ **Null costs** - SQL uses `COALESCE`, TypeScript uses `?? 0` fallbacks
-✅ **Filter-aware metrics** - Success rate correctly shows 100% when filtering status="success" (not based on unfiltered data)
-✅ **Very long error messages** - Truncated to 100 chars in UI with "..." suffix
+- ✅ **Empty datasets** - Charts show "No data available" with filter adjustment suggestions
+- ✅ **All-failure runs** - Success rate displays 0% (not NaN), cost-per-success shows "N/A"
+- ✅ **Null costs** - SQL uses `COALESCE`, TypeScript uses `?? 0` fallbacks
+- ✅ **Filter-aware metrics** - Success rate correctly shows 100% when filtering status="success" (not based on unfiltered data)
+- ✅ **Very long error messages** - Truncated to 100 chars in UI with "..." suffix
 
 ### Edge Cases NOT Handled
 
-❌ **Timezone discrepancies** - All times in UTC; browser displays local time without explicit conversion or selector
-❌ **Clock skew** - `endTime < startTime` would produce negative duration (no API validation)
-❌ **Very large datasets** - >100K rows may slow initial chart render (no virtual scrolling/pagination)
-❌ **Concurrent write conflicts** - Dashboard queries run without transaction isolation; may show inconsistent aggregates during heavy writes
+- ❌ **Timezone discrepancies** - All times in UTC; browser displays local time without explicit conversion or selector
+- ❌ **Clock skew** - `endTime < startTime` would produce negative duration (no API validation)
+- ❌ **Very large datasets** - >100K rows may slow initial chart render (no virtual scrolling/pagination)
+- ❌ **Concurrent write conflicts** - Dashboard queries run without transaction isolation; may show inconsistent aggregates during heavy writes
 
 ### Testing Strategy
 
